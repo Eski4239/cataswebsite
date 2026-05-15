@@ -1,5 +1,6 @@
 import {NextIntlClientProvider} from 'next-intl';
 import {getMessages, setRequestLocale} from 'next-intl/server';
+import {getMessages} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {locales} from '@/lib/i18n/routing';
 import {Navbar} from '@/components/layout/navbar';
@@ -14,6 +15,9 @@ export default async function LocaleLayout({children, params}:{children:React.Re
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
+  const messages = await getMessages();
+  return (
+    <NextIntlClientProvider messages={messages}>
       <Navbar locale={locale} />
       <main>{children}</main>
       <Footer />
