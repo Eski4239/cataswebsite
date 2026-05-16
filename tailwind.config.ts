@@ -5,13 +5,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: '#111111',
-        surface: '#1C1A19',
-        burgundy: '#6E0F1F',
-        gold: '#B08D57',
-        ivory: '#F5EFE6',
-        muted: '#C8B9A6',
-        border: '#2A2725'
+        background: '#FAF7F2',
+        surface: '#FFFFFF',
+        burgundy: '#6B2737',
+        gold: '#B8976A',
+        ivory: '#FAF7F2',
+        charcoal: '#2C2C2C',
+        muted: '#6B6B6B',
+        border: '#E8E2DA'
       },
       fontFamily: {
         heading: ['var(--font-cormorant)', 'serif'],
