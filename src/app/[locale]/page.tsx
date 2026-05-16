@@ -1,6 +1,6 @@
 import {setRequestLocale} from 'next-intl/server';
-import {Locale} from 'next-intl';
-import {buildMetadata} from '@/lib/metadata';
+import type {Locale} from '@/lib/i18n/routing';
+import {buildMetadata} from '@/lib/seo/metadata';
 
 type Props = {
   params: Promise<{locale: Locale}>;
