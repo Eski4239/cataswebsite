@@ -27,17 +27,17 @@ export function ReelsGrid({reels}: {reels: Reel[]}) {
 
   if (reels.length === 0) {
     return (
-      <section className="section-shell pt-0">
-        <p className="text-center font-heading text-2xl text-muted italic">
+      <div className="mx-auto max-w-7xl px-6 py-16 md:px-10">
+        <p className="text-center font-heading text-2xl italic text-muted">
           Stories coming soon.
         </p>
-      </section>
+      </div>
     );
   }
 
   return (
     <>
-      <section className="section-shell pt-0 pb-16">
+      <div className="mx-auto max-w-7xl px-6 pb-10 md:px-10">
         <FadeUp delay={0.1}>
           <div className="flex flex-wrap gap-3">
             {categories.map((cat) => (
@@ -55,30 +55,32 @@ export function ReelsGrid({reels}: {reels: Reel[]}) {
             ))}
           </div>
         </FadeUp>
-      </section>
+      </div>
 
-      <section className="section-shell pt-0">
-        <div className="columns-1 gap-8 md:columns-2 xl:columns-3">
+      <div className="mx-auto max-w-7xl px-6 pb-24 md:px-10">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map((reel) => (
             <FadeUp key={reel.instagramUrl}>
-              <article className="mb-8 break-inside-avoid">
-                <blockquote
-                  className="instagram-media"
-                  data-instgrm-permalink={reel.instagramUrl}
-                  data-instgrm-version="14"
-                  style={{
-                    background: '#FFF',
-                    border: 0,
-                    borderRadius: '12px',
-                    margin: 0,
-                    maxWidth: '540px',
-                    width: '100%',
-                    padding: 0,
-                  }}
-                />
+              <article>
+                <div className="mx-auto max-w-[400px]">
+                  <blockquote
+                    className="instagram-media"
+                    data-instgrm-permalink={reel.instagramUrl}
+                    data-instgrm-version="14"
+                    style={{
+                      background: '#FFF',
+                      border: 0,
+                      borderRadius: '12px',
+                      margin: 0,
+                      maxWidth: '400px',
+                      width: '100%',
+                      padding: 0,
+                    }}
+                  />
+                </div>
                 <div className="mt-4">
                   <p className="meta-label text-burgundy">{reel.category}</p>
-                  <h3 className="mt-2 font-heading text-2xl text-charcoal md:text-3xl">
+                  <h3 className="mt-2 font-heading text-2xl text-charcoal">
                     {reel.title}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted">
@@ -89,7 +91,7 @@ export function ReelsGrid({reels}: {reels: Reel[]}) {
             </FadeUp>
           ))}
         </div>
-      </section>
+      </div>
     </>
   );
 }

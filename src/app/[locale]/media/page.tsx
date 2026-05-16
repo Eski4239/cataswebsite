@@ -16,12 +16,12 @@ export default async function MediaPage({params}: Props) {
 
   return (
     <div className="pt-28">
-      <section className="section-shell pb-12">
+      <section className="mx-auto max-w-7xl px-6 pb-8 pt-12 md:px-10">
         <FadeUp>
           <h1 className="font-heading text-5xl font-light text-charcoal md:text-7xl">
             Stories in Motion
           </h1>
-          <p className="mt-4 max-w-2xl text-lg text-muted">
+          <p className="mt-3 max-w-2xl text-lg text-muted">
             Wine history told through cinematic reels.
           </p>
         </FadeUp>
