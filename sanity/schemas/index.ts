@@ -16,10 +16,8 @@ export const schemaTypes = [
       {name: 'title', type: 'localizedString'},
       {name: 'slug', type: 'slug', options: {source: 'title.en'}},
       {name: 'instagramUrl', type: 'url'},
-      {name: 'region', type: 'localizedString'},
-      {name: 'category', type: 'string'},
       {name: 'description', type: 'localizedString'},
-      {name: 'language', type: 'string'},
+      {name: 'category', type: 'string', options: {list: ['History', 'Regions', 'Grapes', 'Tastings', 'Beginner Guides']}},
       {name: 'featured', type: 'boolean'},
       {name: 'publishedAt', type: 'datetime'}
     ]
