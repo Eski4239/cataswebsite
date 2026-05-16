@@ -1,3 +1,4 @@
+// FadeUp — scroll-triggered fade-in animation wrapper using framer-motion
 'use client';
 import {motion} from 'framer-motion';
 import type {ReactNode} from 'react';

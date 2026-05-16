@@ -1,3 +1,4 @@
+// Navbar — sticky top navigation with language switcher and mobile hamburger menu
 'use client';
 import Link from 'next/link';
 import {useEffect, useState} from 'react';

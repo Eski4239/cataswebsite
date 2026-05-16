@@ -1,3 +1,4 @@
+// Sanity queries — GROQ queries for fetching CMS content
 import {client} from './client';
 
 export type Reel = {

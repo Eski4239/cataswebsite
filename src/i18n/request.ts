@@ -1,3 +1,4 @@
+// next-intl request config — loads locale-specific message files at request time
 import {getRequestConfig} from 'next-intl/server';
 
 import {defaultLocale, locales} from '@/lib/i18n/routing';

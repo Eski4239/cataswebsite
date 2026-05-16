@@ -1,3 +1,4 @@
+// Footer — simple copyright bar with translated text
 'use client';
 import {useTranslations} from 'next-intl';
 

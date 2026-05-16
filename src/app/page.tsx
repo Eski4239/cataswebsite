@@ -1,3 +1,4 @@
+// Root redirect — detects browser language and redirects "/" to /en or /es
 import { redirect } from 'next/navigation';
 import { headers } from 'next/headers';
 

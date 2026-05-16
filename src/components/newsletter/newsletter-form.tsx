@@ -1,3 +1,4 @@
+// NewsletterForm — email signup form with translated labels and success state
 'use client';
 
 import {useState} from 'react';

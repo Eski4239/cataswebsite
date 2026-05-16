@@ -1,3 +1,4 @@
+// ReelsGrid — client component for filtering and displaying Instagram reel embeds
 'use client';
 
 import {useEffect, useState} from 'react';

@@ -1,5 +1,6 @@
+// SEO metadata — generates page metadata, Open Graph, and JSON-LD for all locales
 import type {Metadata} from 'next';
-import type {Locale} from '@/types/content';
+import type {Locale} from '@/lib/i18n/routing';
 
 const siteUrl = 'https://luistorrescatas.com';
 

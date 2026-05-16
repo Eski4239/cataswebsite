@@ -1,3 +1,4 @@
+// Sanity client — connects to the Luis Torres Catas CMS project
 import {createClient} from '@sanity/client';
 import imageUrlBuilder from '@sanity/image-url';
 

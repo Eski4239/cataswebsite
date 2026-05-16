@@ -1,3 +1,4 @@
+// Root layout — loads global CSS and Google Fonts (Inter + Cormorant Garamond)
 import './globals.css';
 import { Inter, Cormorant_Garamond } from 'next/font/google';
 import type { ReactNode } from 'react';

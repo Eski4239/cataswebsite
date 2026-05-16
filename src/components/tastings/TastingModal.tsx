@@ -1,3 +1,4 @@
+// TastingModal — ticket reservation modal with quantity selector and mailto CTA
 'use client';
 
 import {useState, useEffect} from 'react';

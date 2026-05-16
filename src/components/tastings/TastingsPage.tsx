@@ -1,3 +1,4 @@
+// TastingsPage — displays tasting cards with click-to-open ticket modal
 'use client';
 
 import {useState} from 'react';
