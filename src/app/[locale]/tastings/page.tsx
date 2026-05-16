@@ -1,2 +1,5 @@
-import {UpcomingTastings} from '@/components/tastings/upcoming';
-export default function TastingsPage(){return <div className='pt-28'><UpcomingTastings/></div>}
+import {TastingsPage} from '@/components/tastings/TastingsPage';
+
+export default function Page() {
+  return <TastingsPage />;
+}
