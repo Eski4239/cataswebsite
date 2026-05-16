@@ -9,5 +9,12 @@
   "hero": {
     "title": "Historias de vino que merecen ser contadas",
     "subtitle": "Descubre el vino a través de la historia, la cultura y el storytelling cinematográfico."
+  },
+  "about": {
+    "title": "Sobre Luis",
+    "description": "Un viaje íntimo de estilo documental a través de Catas Luis de Torres, desde los primeros encuentros con el viñedo hasta las catas privadas."
+  },
+  "footer": {
+    "copyright": "© {year} Catas Luis de Torres · Narrativa Cinematográfica del Vino"
   }
 }

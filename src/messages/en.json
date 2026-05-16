@@ -9,5 +9,12 @@
   "hero": {
     "title": "Wine Stories Worth Telling",
     "subtitle": "Discover wine through history, culture and cinematic storytelling."
+  },
+  "about": {
+    "title": "About",
+    "description": "An intimate documentary-style journey through Catas Luis de Torres, from first vineyard encounters to curated private tastings."
+  },
+  "footer": {
+    "copyright": "© {year} Catas Luis de Torres · Cinematic Wine Storytelling"
   }
 }

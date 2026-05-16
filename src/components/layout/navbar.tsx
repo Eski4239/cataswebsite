@@ -1,14 +1,16 @@
 'use client';
 import Link from 'next/link';
 import {useEffect,useState} from 'react';
+import {useTranslations} from 'next-intl';
 
-const items=[['','Home'],['/tastings','Wine Tastings'],['/media','Media & Videos'],['/about','About'],['/contact','Contact']];
 export function Navbar({locale}:{locale:string}){
+  const t = useTranslations('nav');
+  const items: [string, string][] = [['', t('home')],['/tastings', t('tastings')],['/media', t('media')],['/about', t('about')],['/contact', t('contact')]];
   const [scrolled,setScrolled]=useState(false);const [open,setOpen]=useState(false);
   useEffect(()=>{const on=()=>setScrolled(window.scrollY>20);window.addEventListener('scroll',on);return()=>window.removeEventListener('scroll',on)},[]);
   return <header className={`fixed top-0 z-50 w-full transition-all duration-700 ${scrolled?'bg-background/85 backdrop-blur border-b border-border':'bg-transparent'}`}>
     <nav className='mx-auto flex max-w-7xl items-center justify-between px-6 py-5 text-xs uppercase tracking-[0.22em]'>
-      <Link href={`/${locale}`} className='text-gold'>Luis Torres Catas</Link>
+      <Link href={`/${locale}`} className='text-gold'>Catas Luis de Torres</Link>
       <div className='hidden md:flex gap-8'>{items.map(([href,label])=><Link key={href} href={`/${locale}${href}`}>{label}</Link>)}</div>
       <button className='md:hidden' onClick={()=>setOpen(!open)}>Menu</button>
     </nav>

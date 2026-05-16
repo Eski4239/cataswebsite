@@ -1,1 +1,13 @@
-export default function AboutPage(){return <section className='section-shell pt-40'><h1 className='font-heading text-6xl'>About</h1><p className='mt-6 max-w-3xl text-muted'>An intimate documentary-style journey through Luis Torres Catas, from first vineyard encounters to curated private tastings.</p></section>}
+import {getTranslations} from 'next-intl/server';
+
+export default async function AboutPage({params}: {params: Promise<{locale: string}>}) {
+  const {locale} = await params;
+  const t = await getTranslations({locale, namespace: 'about'});
+
+  return (
+    <section className="section-shell pt-40">
+      <h1 className="font-heading text-6xl">{t('title')}</h1>
+      <p className="mt-6 max-w-3xl text-muted">{t('description')}</p>
+    </section>
+  );
+}
