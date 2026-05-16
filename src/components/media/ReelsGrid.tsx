@@ -1,12 +1,14 @@
 'use client';
 
 import {useEffect, useState} from 'react';
+import {useTranslations} from 'next-intl';
 import type {Reel} from '@/lib/sanity/queries';
 import {FadeUp} from '@/components/motion/fade-up';
 
-const categories = ['All', 'History', 'Regions', 'Grapes', 'Tastings', 'Beginner Guides'];
+const categoryKeys = ['all', 'history', 'regions', 'grapes', 'tastings', 'beginnerGuides'] as const;
 
 export function ReelsGrid({reels}: {reels: Reel[]}) {
+  const t = useTranslations('media');
   const [active, setActive] = useState('All');
 
   useEffect(() => {
@@ -29,28 +31,30 @@ export function ReelsGrid({reels}: {reels: Reel[]}) {
     return (
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-10">
         <p className="text-center font-heading text-2xl italic text-muted">
-          Stories coming soon.
+          {t('empty')}
         </p>
       </div>
     );
   }
+
+  const categoryValues = ['All', 'History', 'Regions', 'Grapes', 'Tastings', 'Beginner Guides'];
 
   return (
     <>
       <div className="mx-auto max-w-7xl px-6 pb-10 md:px-10">
         <FadeUp delay={0.1}>
           <div className="flex flex-wrap gap-3">
-            {categories.map((cat) => (
+            {categoryKeys.map((key, i) => (
               <button
-                key={cat}
-                onClick={() => setActive(cat)}
+                key={key}
+                onClick={() => setActive(categoryValues[i])}
                 className={`border px-5 py-2 text-xs uppercase tracking-[0.16em] transition-colors duration-300 ${
-                  cat === active
+                  categoryValues[i] === active
                     ? 'border-burgundy bg-burgundy text-ivory'
                     : 'border-border text-charcoal hover:border-burgundy hover:text-burgundy'
                 }`}
               >
-                {cat}
+                {t(`filters.${key}`)}
               </button>
             ))}
           </div>

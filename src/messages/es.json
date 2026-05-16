@@ -2,12 +2,83 @@
   "nav": {
     "home": "Inicio",
     "tastings": "Catas",
-    "media": "Media y Videos",
+    "media": "Media y Vídeos",
     "about": "Sobre Luis",
     "contact": "Contacto"
   },
   "hero": {
-    "title": "Historias de vino que merecen ser contadas",
-    "subtitle": "Descubre el vino a través de la historia, la cultura y el storytelling cinematográfico."
+    "heading": "El vino es historia que se puede saborear.",
+    "subheading": "Un viaje cinematográfico a través del vino, la cultura y la memoria.",
+    "cta": "Explorar las Historias"
+  },
+  "philosophy": {
+    "heading": "El Vino como Memoria Cultural",
+    "body": "El vino es mucho más que zumo de uva fermentado — es un archivo vivo de civilizaciones, geografía y ambición humana. Cada botella guarda la historia de un paisaje moldeado por siglos de manos, clima y tradición. Catar con intención es leer la autobiografía de un lugar y su gente, añada tras añada."
+  },
+  "bottle": {
+    "heading": "Botella de la Semana",
+    "tastingNotesLabel": "Notas de Cata",
+    "region": "Rioja Alta, España",
+    "wineName": "Viña Tondonia Reserva 2011",
+    "winery": "López de Heredia",
+    "tastingNotes": "Cereza seca, cedro, hoja de tabaco y una acidez enérgica que perdura con serena confianza.",
+    "story": "Una bodega donde la paciencia sigue siendo un acto de preservación cultural — este vino captura la continuidad de la Rioja tradicional en una era moderna que a menudo olvida escuchar."
+  },
+  "tastingsHome": {
+    "heading": "Próximas Experiencias",
+    "requestInvitation": "Solicitar Invitación",
+    "card1": {
+      "date": "28 de junio, 2026 · Miami",
+      "title": "Archivo Rioja a la Luz de las Velas",
+      "description": "Una cata vertical privada con contexto histórico y ritmo reflexivo. Ambiente íntimo, limitado a doce invitados."
+    },
+    "card2": {
+      "date": "19 de julio, 2026 · Nueva York",
+      "title": "Narrativas de Altitud Andina",
+      "description": "Cata guiada por historias a través de la altitud, el patrimonio y la cultura de mesa. Una velada de terroir y tradición sudamericana."
+    }
+  },
+  "newsletter": {
+    "heading": "Únete al Diario",
+    "subheading": "Historias, crónicas y notas de cata — entregadas con intención.",
+    "placeholder": "Tu correo electrónico",
+    "button": "Suscribirse",
+    "sending": "Enviando…",
+    "success": "Gracias — bienvenido al diario."
+  },
+  "media": {
+    "heading": "Historias en Movimiento",
+    "subheading": "La historia del vino contada a través de reels cinematográficos.",
+    "empty": "Próximamente, nuevas historias.",
+    "filters": {
+      "all": "Todos",
+      "history": "Historia",
+      "regions": "Regiones",
+      "grapes": "Uvas",
+      "tastings": "Catas",
+      "beginnerGuides": "Guías Iniciales"
+    }
+  },
+  "tastings": {
+    "heading": "Próximas Experiencias",
+    "subheading": "Encuentros íntimos centrados en historias, terroir y contexto cultural.",
+    "perPerson": "por persona",
+    "viewDetails": "Ver Detalles",
+    "title": "Archivo Rioja a la Luz de las Velas",
+    "city": "Miami",
+    "date": "28 de junio, 2026",
+    "time": "19:30",
+    "description": "Una cata vertical privada con contexto histórico y ritmo reflexivo. Ambiente íntimo, limitado a doce invitados.",
+    "longDescription": "Una velada dedicada a las grandes reservas de Rioja Alta — vinos envejecidos con paciencia en roble americano, extraídos de bodegas que han practicado la contención durante más de un siglo. Cada copa se acompaña de su momento histórico: la recuperación tras la filoxera, el movimiento cooperativo, la revolución silenciosa de la fermentación con temperatura controlada. Luz de velas, conversación sin prisas y ese tipo de silencio que solo el vino antiguo sabe enseñar.",
+    "modal": {
+      "guests": "Invitados",
+      "total": "Total",
+      "reserve": "Reservar Tu Plaza",
+      "emailSubject": "Reserva de Cata - {title}",
+      "emailBody": "Me gustaría reservar {quantity} plaza(s) para {title} el {date}."
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Luis Torres Catas · Narrativa Cinematográfica del Vino"
   }
 }

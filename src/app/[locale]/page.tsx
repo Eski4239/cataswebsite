@@ -1,4 +1,4 @@
-import {setRequestLocale} from 'next-intl/server';
+import {setRequestLocale, getTranslations} from 'next-intl/server';
 import type {Locale} from '@/lib/i18n/routing';
 import {buildMetadata} from '@/lib/seo/metadata';
 import Link from 'next/link';
@@ -18,6 +18,12 @@ export default async function Home({params}: Props) {
   const {locale} = await params;
   setRequestLocale(locale);
 
+  const hero = await getTranslations('hero');
+  const philosophy = await getTranslations('philosophy');
+  const bottle = await getTranslations('bottle');
+  const tastingsHome = await getTranslations('tastingsHome');
+  const newsletter = await getTranslations('newsletter');
+
   return (
     <>
       {/* HERO */}
@@ -28,12 +34,12 @@ export default async function Home({params}: Props) {
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <FadeUp>
             <h1 className="font-heading text-5xl font-light leading-[1.1] text-charcoal md:text-7xl lg:text-8xl">
-              Wine is history you can taste.
+              {hero('heading')}
             </h1>
           </FadeUp>
           <FadeUp delay={0.15}>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted md:text-xl">
-              A cinematic journey through wine, culture, and memory.
+              {hero('subheading')}
             </p>
           </FadeUp>
           <FadeUp delay={0.3}>
@@ -41,7 +47,7 @@ export default async function Home({params}: Props) {
               href={`/${locale}/media`}
               className="mt-10 inline-block border border-burgundy px-8 py-3.5 text-sm uppercase tracking-[0.18em] text-burgundy transition-colors duration-300 hover:bg-burgundy hover:text-ivory"
             >
-              Explore the Stories
+              {hero('cta')}
             </Link>
           </FadeUp>
         </div>
@@ -52,15 +58,12 @@ export default async function Home({params}: Props) {
         <div className="mx-auto max-w-3xl text-center">
           <FadeUp>
             <h2 className="font-heading text-4xl font-light text-charcoal md:text-5xl">
-              Wine as Cultural Memory
+              {philosophy('heading')}
             </h2>
           </FadeUp>
           <FadeUp delay={0.1}>
             <p className="mt-8 text-lg leading-relaxed text-muted">
-              Wine is more than fermented grape juice — it is a living archive of civilizations,
-              geography, and human ambition. Each bottle holds the story of a landscape shaped by
-              centuries of hands, weather, and tradition. To taste wine intentionally is to read
-              the autobiography of a place and its people, one vintage at a time.
+              {philosophy('body')}
             </p>
           </FadeUp>
         </div>
@@ -72,24 +75,21 @@ export default async function Home({params}: Props) {
           <div className="mx-auto max-w-3xl">
             <div className="mb-6 h-px w-16 bg-burgundy" />
             <h2 className="font-heading text-4xl font-light text-charcoal md:text-5xl">
-              Bottle of the Week
+              {bottle('heading')}
             </h2>
             <article className="mt-10 rounded-2xl border border-border bg-surface p-8 md:p-12">
-              <p className="meta-label text-burgundy">Rioja Alta, Spain</p>
+              <p className="meta-label text-burgundy">{bottle('region')}</p>
               <h3 className="mt-3 font-heading text-3xl text-charcoal md:text-4xl">
-                Viña Tondonia Reserva 2011
+                {bottle('wineName')}
               </h3>
-              <p className="mt-2 text-sm text-muted">López de Heredia</p>
+              <p className="mt-2 text-sm text-muted">{bottle('winery')}</p>
               <div className="mt-6 space-y-4 text-muted">
                 <p>
-                  <span className="meta-label mr-2 text-charcoal">Tasting Notes</span><br />
-                  Dried cherry, cedar, tobacco leaf, and energetic acidity that lingers
-                  with quiet confidence.
+                  <span className="meta-label mr-2 text-charcoal">{bottle('tastingNotesLabel')}</span><br />
+                  {bottle('tastingNotes')}
                 </p>
                 <p className="border-l-2 border-gold pl-4 italic">
-                  A cellar where patience remains an act of cultural preservation — this wine
-                  captures the continuity of traditional Rioja in a modern era that often forgets
-                  to listen.
+                  {bottle('story')}
                 </p>
               </div>
             </article>
@@ -102,39 +102,37 @@ export default async function Home({params}: Props) {
         <FadeUp>
           <div className="mx-auto max-w-4xl">
             <h2 className="text-center font-heading text-4xl font-light text-charcoal md:text-5xl">
-              Upcoming Experiences
+              {tastingsHome('heading')}
             </h2>
             <div className="mt-12 grid gap-8 md:grid-cols-2">
               <article className="rounded-2xl border border-border bg-surface p-8">
-                <p className="meta-label">June 28, 2026 · Miami</p>
+                <p className="meta-label">{tastingsHome('card1.date')}</p>
                 <h3 className="mt-3 font-heading text-2xl text-charcoal md:text-3xl">
-                  Candlelight Rioja Archive
+                  {tastingsHome('card1.title')}
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted">
-                  A private vertical tasting with historical context and reflective pacing.
-                  Intimate setting, limited to twelve guests.
+                  {tastingsHome('card1.description')}
                 </p>
                 <Link
                   href={`/${locale}/contact`}
                   className="mt-6 inline-block border border-burgundy px-6 py-2.5 text-xs uppercase tracking-[0.16em] text-burgundy transition-colors duration-300 hover:bg-burgundy hover:text-ivory"
                 >
-                  Request Invitation
+                  {tastingsHome('requestInvitation')}
                 </Link>
               </article>
               <article className="rounded-2xl border border-border bg-surface p-8">
-                <p className="meta-label">July 19, 2026 · New York</p>
+                <p className="meta-label">{tastingsHome('card2.date')}</p>
                 <h3 className="mt-3 font-heading text-2xl text-charcoal md:text-3xl">
-                  Andean Altitude Narratives
+                  {tastingsHome('card2.title')}
                 </h3>
                 <p className="mt-3 text-sm leading-relaxed text-muted">
-                  Story-led tasting across altitude, heritage, and table culture. An evening
-                  of South American terroir and tradition.
+                  {tastingsHome('card2.description')}
                 </p>
                 <Link
                   href={`/${locale}/contact`}
                   className="mt-6 inline-block border border-burgundy px-6 py-2.5 text-xs uppercase tracking-[0.16em] text-burgundy transition-colors duration-300 hover:bg-burgundy hover:text-ivory"
                 >
-                  Request Invitation
+                  {tastingsHome('requestInvitation')}
                 </Link>
               </article>
             </div>
@@ -147,10 +145,10 @@ export default async function Home({params}: Props) {
         <FadeUp>
           <div className="mx-auto max-w-2xl text-center">
             <h2 className="font-heading text-4xl font-light text-charcoal md:text-5xl">
-              Join the Journal
+              {newsletter('heading')}
             </h2>
             <p className="mt-4 text-muted">
-              Stories, histories, and tasting notes — delivered with intention.
+              {newsletter('subheading')}
             </p>
             <NewsletterForm />
           </div>

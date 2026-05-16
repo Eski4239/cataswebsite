@@ -7,7 +7,78 @@
     "contact": "Contact"
   },
   "hero": {
-    "title": "Wine Stories Worth Telling",
-    "subtitle": "Discover wine through history, culture and cinematic storytelling."
+    "heading": "Wine is history you can taste.",
+    "subheading": "A cinematic journey through wine, culture, and memory.",
+    "cta": "Explore the Stories"
+  },
+  "philosophy": {
+    "heading": "Wine as Cultural Memory",
+    "body": "Wine is more than fermented grape juice — it is a living archive of civilizations, geography, and human ambition. Each bottle holds the story of a landscape shaped by centuries of hands, weather, and tradition. To taste wine intentionally is to read the autobiography of a place and its people, one vintage at a time."
+  },
+  "bottle": {
+    "heading": "Bottle of the Week",
+    "tastingNotesLabel": "Tasting Notes",
+    "region": "Rioja Alta, Spain",
+    "wineName": "Viña Tondonia Reserva 2011",
+    "winery": "López de Heredia",
+    "tastingNotes": "Dried cherry, cedar, tobacco leaf, and energetic acidity that lingers with quiet confidence.",
+    "story": "A cellar where patience remains an act of cultural preservation — this wine captures the continuity of traditional Rioja in a modern era that often forgets to listen."
+  },
+  "tastingsHome": {
+    "heading": "Upcoming Experiences",
+    "requestInvitation": "Request Invitation",
+    "card1": {
+      "date": "June 28, 2026 · Miami",
+      "title": "Candlelight Rioja Archive",
+      "description": "A private vertical tasting with historical context and reflective pacing. Intimate setting, limited to twelve guests."
+    },
+    "card2": {
+      "date": "July 19, 2026 · New York",
+      "title": "Andean Altitude Narratives",
+      "description": "Story-led tasting across altitude, heritage, and table culture. An evening of South American terroir and tradition."
+    }
+  },
+  "newsletter": {
+    "heading": "Join the Journal",
+    "subheading": "Stories, histories, and tasting notes — delivered with intention.",
+    "placeholder": "Your email address",
+    "button": "Subscribe",
+    "sending": "Joining…",
+    "success": "Thank you — welcome to the journal."
+  },
+  "media": {
+    "heading": "Stories in Motion",
+    "subheading": "Wine history told through cinematic reels.",
+    "empty": "Stories coming soon.",
+    "filters": {
+      "all": "All",
+      "history": "History",
+      "regions": "Regions",
+      "grapes": "Grapes",
+      "tastings": "Tastings",
+      "beginnerGuides": "Beginner Guides"
+    }
+  },
+  "tastings": {
+    "heading": "Upcoming Experiences",
+    "subheading": "Intimate, invitation-based gatherings centered on stories, terroir, and cultural context.",
+    "perPerson": "per person",
+    "viewDetails": "View Details",
+    "title": "Candlelight Rioja Archive",
+    "city": "Miami",
+    "date": "June 28, 2026",
+    "time": "7:30 PM",
+    "description": "A private vertical tasting with historical context and reflective pacing. Intimate setting, limited to twelve guests.",
+    "longDescription": "An evening devoted to the great reserves of Rioja Alta — wines aged patiently in American oak, drawn from cellars that have practiced restraint for over a century. Each pour is paired with its historical moment: the phylloxera recovery, the cooperative movement, the quiet revolution of temperature-controlled fermentation. Candlelight, unhurried conversation, and the kind of silence that only old wine can teach.",
+    "modal": {
+      "guests": "Guests",
+      "total": "Total",
+      "reserve": "Reserve Your Place",
+      "emailSubject": "Tasting Reservation - {title}",
+      "emailBody": "I would like to reserve {quantity} ticket(s) for {title} on {date}."
+    }
+  },
+  "footer": {
+    "copyright": "© {year} Luis Torres Catas · Cinematic Wine Storytelling"
   }
 }

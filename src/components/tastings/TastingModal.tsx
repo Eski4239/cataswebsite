@@ -1,6 +1,7 @@
 'use client';
 
 import {useState, useEffect} from 'react';
+import {useTranslations} from 'next-intl';
 
 type Tasting = {
   title: string;
@@ -13,6 +14,7 @@ type Tasting = {
 };
 
 export function TastingModal({tasting, onClose}: {tasting: Tasting; onClose: () => void}) {
+  const t = useTranslations('tastings.modal');
   const [quantity, setQuantity] = useState(1);
   const [visible, setVisible] = useState(false);
 
@@ -24,7 +26,9 @@ export function TastingModal({tasting, onClose}: {tasting: Tasting; onClose: () 
 
   const total = tasting.price * quantity;
 
-  const mailtoHref = `mailto:luis@luistorrescatas.com?subject=${encodeURIComponent(`Tasting Reservation - ${tasting.title}`)}&body=${encodeURIComponent(`I would like to reserve ${quantity} ticket${quantity > 1 ? 's' : ''} for ${tasting.title} on ${tasting.date}.`)}`;
+  const subject = t('emailSubject', {title: tasting.title});
+  const body = t('emailBody', {quantity: String(quantity), title: tasting.title, date: tasting.date});
+  const mailtoHref = `mailto:luis@luistorrescatas.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
   return (
     <div
@@ -69,7 +73,7 @@ export function TastingModal({tasting, onClose}: {tasting: Tasting; onClose: () 
             <p className="text-sm text-muted">€{tasting.price} per person</p>
 
             <div className="mt-4 flex items-center gap-4">
-              <span className="text-xs uppercase tracking-[0.16em] text-charcoal">Guests</span>
+              <span className="text-xs uppercase tracking-[0.16em] text-charcoal">{t('guests')}</span>
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -88,14 +92,14 @@ export function TastingModal({tasting, onClose}: {tasting: Tasting; onClose: () 
             </div>
 
             <p className="mt-4 font-heading text-2xl text-charcoal">
-              Total: €{total}
+              {t('total')}: €{total}
             </p>
 
             <a
               href={mailtoHref}
               className="mt-6 block w-full border border-burgundy bg-burgundy py-3.5 text-center text-xs uppercase tracking-[0.18em] text-ivory transition-colors duration-300 hover:bg-burgundy/90"
             >
-              Reserve Your Place
+              {t('reserve')}
             </a>
           </div>
         </div>

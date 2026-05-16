@@ -2,8 +2,7 @@
 import Link from 'next/link';
 import {useEffect, useState} from 'react';
 import {usePathname} from 'next/navigation';
-
-const items = [['', 'Home'], ['/tastings', 'Wine Tastings'], ['/media', 'Media & Videos'], ['/about', 'About'], ['/contact', 'Contact']];
+import {useTranslations} from 'next-intl';
 
 function LanguageSwitcher({locale}: {locale: string}) {
   const pathname = usePathname();
@@ -29,8 +28,17 @@ function LanguageSwitcher({locale}: {locale: string}) {
 }
 
 export function Navbar({locale}: {locale: string}) {
+  const t = useTranslations('nav');
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+
+  const items: [string, string][] = [
+    ['', t('home')],
+    ['/tastings', t('tastings')],
+    ['/media', t('media')],
+    ['/about', t('about')],
+    ['/contact', t('contact')],
+  ];
 
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 20);
