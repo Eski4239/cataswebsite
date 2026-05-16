@@ -13,6 +13,13 @@ export async function generateMetadata({params}: {params: {locale: Locale}}): Pr
 
 export default function Home({params}: {params: {locale: Locale}}) {
   const {locale} = params;
+export async function generateMetadata({params}: {params: Promise<{locale: Locale}>}): Promise<Metadata> {
+  const {locale} = await params;
+  return buildMetadata(locale);
+}
+
+export default async function Home({params}: {params: Promise<{locale: Locale}>}) {
+  const {locale} = await params;
   const jsonLd = buildJsonLd(locale);
 
   return (
