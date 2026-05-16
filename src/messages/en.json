@@ -1,0 +1,13 @@
+{
+  "nav": {
+    "home": "Home",
+    "tastings": "Wine Tastings",
+    "media": "Media & Videos",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Wine Stories Worth Telling",
+    "subtitle": "Discover wine through history, culture and cinematic storytelling."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "tastings": "Catas",
+    "media": "Media y Videos",
+    "about": "Sobre Luis",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "title": "Historias de vino que merecen ser contadas",
+    "subtitle": "Descubre el vino a través de la historia, la cultura y el storytelling cinematográfico."
+  }
+}
