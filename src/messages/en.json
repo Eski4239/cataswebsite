@@ -78,7 +78,11 @@
       "emailBody": "I would like to reserve {quantity} ticket(s) for {title} on {date}."
     }
   },
+  "about": {
+    "title": "About",
+    "description": "An intimate documentary-style journey through Catas Luis de Torres, from first vineyard encounters to curated private tastings."
+  },
   "footer": {
-    "copyright": "© {year} Luis Torres Catas · Cinematic Wine Storytelling"
+    "copyright": "© {year} Catas Luis de Torres · Cinematic Wine Storytelling"
   }
 }

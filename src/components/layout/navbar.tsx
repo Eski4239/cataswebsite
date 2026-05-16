@@ -1,4 +1,3 @@
-// Navbar — sticky top navigation with language switcher and mobile hamburger menu
 'use client';
 import Link from 'next/link';
 import {useEffect, useState} from 'react';
@@ -50,7 +49,7 @@ export function Navbar({locale}: {locale: string}) {
   return (
     <header className={`fixed top-0 z-50 w-full transition-all duration-700 ${scrolled ? 'bg-background/85 backdrop-blur border-b border-border' : 'bg-transparent'}`}>
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 text-xs uppercase tracking-[0.22em]">
-        <Link href={`/${locale}`} className="text-gold">Luis Torres Catas</Link>
+        <Link href={`/${locale}`} className="text-gold">Catas Luis de Torres</Link>
         <div className="hidden md:flex items-center gap-8">
           {items.map(([href, label]) => (
             <Link key={href} href={`/${locale}${href}`}>{label}</Link>

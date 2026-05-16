@@ -1,4 +1,3 @@
-// Home page — hero, philosophy, bottle of the week, upcoming tastings, and newsletter
 import {setRequestLocale, getTranslations} from 'next-intl/server';
 import type {Locale} from '@/lib/i18n/routing';
 import {buildMetadata} from '@/lib/seo/metadata';

@@ -78,7 +78,11 @@
       "emailBody": "Me gustaría reservar {quantity} plaza(s) para {title} el {date}."
     }
   },
+  "about": {
+    "title": "Sobre Luis",
+    "description": "Un viaje íntimo de estilo documental a través de Catas Luis de Torres, desde los primeros encuentros con el viñedo hasta las catas privadas."
+  },
   "footer": {
-    "copyright": "© {year} Luis Torres Catas · Narrativa Cinematográfica del Vino"
+    "copyright": "© {year} Catas Luis de Torres · Narrativa Cinematográfica del Vino"
   }
 }

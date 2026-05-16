@@ -6,7 +6,7 @@ const siteUrl = 'https://luistorrescatas.com';
 
 export function buildMetadata(locale: Locale, path = '', title?: string, description?: string): Metadata {
   const canonical = `${siteUrl}/${locale}${path}`;
-  const defaultTitle = 'Luis Torres Catas | Cinematic Wine Storytelling';
+  const defaultTitle = 'Catas Luis de Torres | Cinematic Wine Storytelling';
   const defaultDescription = 'A cinematic luxury editorial platform exploring wine through stories, history, travel, and private tasting experiences.';
 
   return {
@@ -23,8 +23,8 @@ export function buildJsonLd(locale: Locale) {
   return {
     '@context': 'https://schema.org',
     '@graph': [
-      {'@type': 'Person', name: 'Luis Torres Catas', jobTitle: 'Wine Storyteller', url: `${siteUrl}/${locale}`},
-      {'@type': 'Organization', name: 'Luis Torres Catas', url: `${siteUrl}/${locale}`}
+      {'@type': 'Person', name: 'Catas Luis de Torres', jobTitle: 'Wine Storyteller', url: `${siteUrl}/${locale}`},
+      {'@type': 'Organization', name: 'Catas Luis de Torres', url: `${siteUrl}/${locale}`}
     ]
   };
 }
