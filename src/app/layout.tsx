@@ -1,6 +1,7 @@
 // Root layout — loads global CSS and Google Fonts (Inter + Cormorant Garamond)
 import './globals.css';
 import { Inter, Cormorant_Garamond } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 import type { ReactNode } from 'react';
 
 const inter = Inter({
@@ -24,7 +25,7 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${cormorant.variable}`}
     >
-      <body>{children}</body>
+      <body>{children}<Analytics /></body>
     </html>
   );
 }
