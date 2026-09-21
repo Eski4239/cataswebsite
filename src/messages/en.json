@@ -63,5 +63,32 @@
     "heading": "Contact",
     "subheading": "For collaborations, private tastings and press, send us a message on Instagram.",
     "instagramCta": "Message us on Instagram"
+  },
+  "meta": {
+    "home": {
+      "title": "Catas Luis de Torres | Cinematic Wine Storytelling",
+      "description": "A cinematic editorial journey through wine: stories, history, travel and private tasting experiences."
+    },
+    "tastings": {
+      "title": "Wine Tastings",
+      "description": "Intimate, invitation-based wine tastings centred on stories, terroir and cultural context."
+    },
+    "media": {
+      "title": "Media & Videos",
+      "description": "Wine history told through short cinematic reels: regions, grapes, tastings and beginner guides."
+    },
+    "about": {
+      "title": "About Luis",
+      "description": "Luis de Torres is an art historian who explores wine through history, culture and storytelling."
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "For collaborations, private tastings and press, message us on Instagram."
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The page you are looking for does not exist or has moved.",
+    "home": "Back to the home page"
   }
 }

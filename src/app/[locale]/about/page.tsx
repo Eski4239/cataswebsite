@@ -1,6 +1,13 @@
 import {getTranslations} from 'next-intl/server';
 import Image from 'next/image';
 import {getAboutContent} from '@/lib/content';
+import type {Locale} from '@/lib/i18n/routing';
+import {pageMetadata} from '@/lib/seo/metadata';
+
+export async function generateMetadata({params}: {params: Promise<{locale: Locale}>}) {
+  const {locale} = await params;
+  return pageMetadata(locale, 'about');
+}
 
 export default async function AboutPage({params}: {params: Promise<{locale: string}>}) {
   const {locale} = await params;

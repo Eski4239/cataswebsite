@@ -63,5 +63,32 @@
     "heading": "Contacto",
     "subheading": "Para colaboraciones, catas privadas y prensa, escríbenos por Instagram.",
     "instagramCta": "Escríbenos por Instagram"
+  },
+  "meta": {
+    "home": {
+      "title": "Catas Luis de Torres | Narrativa cinematográfica del vino",
+      "description": "Un viaje editorial y cinematográfico por el vino: relatos, historia, viajes y catas privadas."
+    },
+    "tastings": {
+      "title": "Catas de vino",
+      "description": "Catas íntimas y por invitación centradas en historias, terruño y contexto cultural."
+    },
+    "media": {
+      "title": "Medios y vídeos",
+      "description": "La historia del vino contada en reels cinematográficos: regiones, uvas, catas y guías para principiantes."
+    },
+    "about": {
+      "title": "Sobre Luis",
+      "description": "Luis de Torres es historiador del arte y explora el vino a través de la historia, la cultura y el relato."
+    },
+    "contact": {
+      "title": "Contacto",
+      "description": "Para colaboraciones, catas privadas y prensa, escríbenos por Instagram."
+    }
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "body": "La página que buscas no existe o se ha movido.",
+    "home": "Volver al inicio"
   }
 }

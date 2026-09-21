@@ -1,6 +1,6 @@
 import {setRequestLocale, getTranslations} from 'next-intl/server';
 import type {Locale} from '@/lib/i18n/routing';
-import {buildMetadata} from '@/lib/seo/metadata';
+import {pageMetadata} from '@/lib/seo/metadata';
 import Link from 'next/link';
 import {FadeUp} from '@/components/motion/fade-up';
 import {getBottleOfWeek, getTastings} from '@/lib/content';
@@ -14,7 +14,7 @@ type Props = {
 
 export async function generateMetadata({params}: Props) {
   const {locale} = await params;
-  return buildMetadata(locale);
+  return pageMetadata(locale, 'home');
 }
 
 export default async function Home({params}: Props) {

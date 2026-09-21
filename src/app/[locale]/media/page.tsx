@@ -4,6 +4,7 @@ import type {Locale} from '@/lib/i18n/routing';
 import {getReels} from '@/lib/content';
 import {FadeUp} from '@/components/motion/fade-up';
 import {ReelsGrid} from '@/components/media/ReelsGrid';
+import {pageMetadata} from '@/lib/seo/metadata';
 
 // Re-render periodically so scheduled reels appear automatically
 export const revalidate = 900;
@@ -11,6 +12,11 @@ export const revalidate = 900;
 type Props = {
   params: Promise<{locale: Locale}>;
 };
+
+export async function generateMetadata({params}: Props) {
+  const {locale} = await params;
+  return pageMetadata(locale, 'media');
+}
 
 export default async function MediaPage({params}: Props) {
   const {locale} = await params;

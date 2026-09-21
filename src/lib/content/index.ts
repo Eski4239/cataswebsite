@@ -54,6 +54,8 @@ export type Tasting = {
   id: string;
   title: string;
   city: string;
+  isoDate: string;
+  time?: string;
   dateLabel: string;
   timeLabel?: string;
   description: string;
@@ -74,6 +76,8 @@ export async function getTastings(locale: string): Promise<Tasting[]> {
       id: t.id,
       title: pick(t.title, locale),
       city: pick(t.city, locale),
+      isoDate: t.date,
+      time: t.time,
       dateLabel: new Intl.DateTimeFormat(locale, {dateStyle: 'long', timeZone: 'UTC'}).format(new Date(`${t.date}T00:00:00Z`)),
       timeLabel: t.time
         ? new Intl.DateTimeFormat(locale, {hour: 'numeric', minute: '2-digit', timeZone: 'UTC'}).format(

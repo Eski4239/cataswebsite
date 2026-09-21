@@ -2,8 +2,14 @@
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import type {Locale} from '@/lib/i18n/routing';
 import {FadeUp} from '@/components/motion/fade-up';
+import {pageMetadata} from '@/lib/seo/metadata';
 
 const INSTAGRAM_URL = 'https://www.instagram.com/luistorrescatas/';
+
+export async function generateMetadata({params}: {params: Promise<{locale: Locale}>}) {
+  const {locale} = await params;
+  return pageMetadata(locale, 'contact');
+}
 
 export default async function ContactPage({params}: {params: Promise<{locale: Locale}>}) {
   const {locale} = await params;

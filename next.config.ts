@@ -39,6 +39,14 @@ const nextConfig: NextConfig = {
       }
     ]
   },
+  // "/" has no page of its own: send Spanish-language browsers to /es and everyone else to /en.
+  // (middleware.ts used to sit here but at the project root it was never loaded, since the app lives in src/.)
+  async redirects() {
+    return [
+      {source: '/', has: [{type: 'header' as const, key: 'accept-language', value: '^es.*'}], destination: '/es', permanent: false},
+      {source: '/', destination: '/en', permanent: false}
+    ];
+  },
   // Only in production: the dev server needs eval for hot reloading, which the policy above would block.
   async headers() {
     return process.env.NODE_ENV === 'production' ? [{source: '/:path*', headers: securityHeaders}] : [];
