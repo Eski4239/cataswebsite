@@ -6,7 +6,7 @@ import type {Metadata} from 'next';
 import {Cormorant_Garamond, Inter} from 'next/font/google';
 import {notFound} from 'next/navigation';
 import {NextIntlClientProvider} from 'next-intl';
-import {getMessages, setRequestLocale} from 'next-intl/server';
+import {getMessages, getTranslations, setRequestLocale} from 'next-intl/server';
 
 import {Footer} from '@/components/layout/footer';
 import {Navbar} from '@/components/layout/navbar';
@@ -45,14 +45,25 @@ export default async function LocaleLayout({children, params}: {children: React.
   setRequestLocale(locale);
 
   const messages = await getMessages();
+  const nav = await getTranslations({locale, namespace: 'nav'});
 
   return (
     <html lang={locale} className={`${inter.variable} ${cormorant.variable}`}>
       <body>
+        {/* Without JavaScript the scroll animations never run, so show everything. */}
+        <noscript>
+          <style>{`[data-fade] { opacity: 1 !important; transform: none !important; }`}</style>
+        </noscript>
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-burgundy focus:px-4 focus:py-2 focus:text-ivory"
+        >
+          {nav('skip')}
+        </a>
         <script type="application/ld+json" dangerouslySetInnerHTML={{__html: jsonLdScript(buildJsonLd(locale))}} />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Navbar locale={locale} />
-          <main>{children}</main>
+          <main id="main">{children}</main>
           <Footer />
         </NextIntlClientProvider>
         <Analytics />

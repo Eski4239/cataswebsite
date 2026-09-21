@@ -4,7 +4,12 @@
     "tastings": "Wine Tastings",
     "media": "Media & Videos",
     "about": "About",
-    "contact": "Contact"
+    "contact": "Contact",
+    "menu": "Menu",
+    "close": "Close",
+    "label": "Main navigation",
+    "skip": "Skip to content",
+    "language": "Language"
   },
   "hero": {
     "heading": "Wine is history you can taste.",
@@ -48,13 +53,17 @@
       "total": "Total",
       "reserve": "Reserve Your Place",
       "emailSubject": "Tasting Reservation - {title}",
-      "emailBody": "I would like to reserve {quantity} ticket(s) for {title} on {date}."
+      "emailBody": "I would like to reserve {quantity} ticket(s) for {title} on {date}.",
+      "close": "Close",
+      "decrease": "Fewer guests",
+      "increase": "More guests"
     },
     "empty": "New experiences will be announced soon. Follow us on Instagram to hear first."
   },
   "about": {
     "title": "About",
-    "description": "An intimate documentary-style journey through Catas Luis de Torres, from first vineyard encounters to curated private tastings."
+    "description": "An intimate documentary-style journey through Catas Luis de Torres, from first vineyard encounters to curated private tastings.",
+    "portraitAlt": "Portrait of Luis de Torres"
   },
   "footer": {
     "copyright": "© {year} Catas Luis de Torres · Cinematic Wine Storytelling"
@@ -90,5 +99,10 @@
     "title": "Page not found",
     "body": "The page you are looking for does not exist or has moved.",
     "home": "Back to the home page"
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "body": "We could not load this page. Please try again.",
+    "retry": "Try again"
   }
 }

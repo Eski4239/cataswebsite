@@ -1,7 +1,8 @@
 // TastingsPage — displays tasting cards (from content/tastings.json) with click-to-open ticket modal
 'use client';
 
-import {useState} from 'react';
+import Image from 'next/image';
+import {useCallback, useState} from 'react';
 import {useTranslations} from 'next-intl';
 import type {Tasting} from '@/lib/content';
 import {FadeUp} from '@/components/motion/fade-up';
@@ -10,6 +11,7 @@ import {TastingModal} from '@/components/tastings/TastingModal';
 export function TastingsPage({tastings}: {tastings: Tasting[]}) {
   const t = useTranslations('tastings');
   const [selected, setSelected] = useState<Tasting | null>(null);
+  const close = useCallback(() => setSelected(null), []);
 
   return (
     <div className="pt-28">
@@ -29,7 +31,9 @@ export function TastingsPage({tastings}: {tastings: Tasting[]}) {
                   onClick={() => setSelected(tasting)}
                   className="cursor-pointer overflow-hidden rounded-2xl border border-border bg-surface transition-shadow duration-300 hover:shadow-lg"
                 >
-                  <img src={tasting.image} alt={tasting.title} className="h-56 w-full object-cover" />
+                  <div className="relative h-56 w-full">
+                    <Image src={tasting.image} alt={tasting.title} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+                  </div>
                   <div className="p-6">
                     <p className="meta-label">
                       {tasting.dateLabel} · {tasting.city}
@@ -41,7 +45,11 @@ export function TastingsPage({tastings}: {tastings: Tasting[]}) {
                         €{tasting.price} {t('perPerson')}
                       </p>
                     )}
-                    <button className="mt-4 border border-burgundy px-5 py-2.5 text-xs uppercase tracking-[0.16em] text-burgundy transition-colors duration-300 hover:bg-burgundy hover:text-ivory">
+                    <button
+                      type="button"
+                      aria-haspopup="dialog"
+                      className="mt-4 border border-burgundy px-5 py-2.5 text-xs uppercase tracking-[0.16em] text-burgundy transition-colors duration-300 hover:bg-burgundy hover:text-ivory"
+                    >
                       {t('viewDetails')}
                     </button>
                   </div>
@@ -52,7 +60,7 @@ export function TastingsPage({tastings}: {tastings: Tasting[]}) {
         )}
       </section>
 
-      {selected && <TastingModal tasting={selected} onClose={() => setSelected(null)} />}
+      {selected && <TastingModal tasting={selected} onClose={close} />}
     </div>
   );
 }

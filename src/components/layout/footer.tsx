@@ -1,16 +1,15 @@
-'use client';
-import {useTranslations} from 'next-intl';
+import {getTranslations} from 'next-intl/server';
 
-export function Footer() {
-  const t = useTranslations('footer');
+export async function Footer() {
+  const t = await getTranslations('footer');
   return (
-    <footer className="border-t border-border py-12 text-center text-sm text-muted">
+    <footer className="border-t border-border px-6 py-12 text-center text-sm text-muted">
       <div>{t('copyright', {year: new Date().getFullYear()})}</div>
       <a
         href="https://www.instagram.com/luistorrescatas/"
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-4 inline-flex items-center gap-2 text-gold/70 hover:text-gold transition-colors"
+        className="mt-4 inline-flex items-center gap-2 text-gold-deep transition-colors hover:text-burgundy"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -22,6 +21,7 @@ export function Footer() {
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
+          aria-hidden="true"
         >
           <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
           <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
