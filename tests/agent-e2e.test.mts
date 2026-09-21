@@ -15,7 +15,7 @@ const J = (o: unknown, status = 200) => new Response(JSON.stringify(o), {status,
 globalThis.fetch = (async (url: string, init?: RequestInit) => {
   const u = String(url), m = init?.method ?? 'GET'; const raw = init?.body;
   if (u.startsWith('https://api.telegram.org/file/')) return new Response(new Uint8Array(jpg));
-  if (u.startsWith('https://api.telegram.org/')) { const method = u.split('/').pop()!; const body = raw instanceof FormData ? {} : JSON.parse(String(raw)); tg.push({method, body}); return J({ok: true, result: method === 'getFile' ? {file_path: 'photos/x.jpg'} : {}}); }
+  if (u.startsWith('https://api.telegram.org/')) { const method = u.split('/').pop()!; const isForm = raw instanceof FormData; const body = isForm ? {chat_id: Number((raw as FormData).get('chat_id'))} : JSON.parse(String(raw)); tg.push({method, body}); if ((method === 'sendMessage' || method === 'sendDocument') && body.chat_id === 123) return J({ok: false, description: 'Forbidden: bot was blocked by the user'}); return J({ok: true, result: method === 'getFile' ? {file_path: 'photos/x.jpg'} : method === 'getMe' ? {id: 999, username: 'luis_test_bot', is_bot: true} : {}}); }
   if (u.startsWith('https://api.anthropic.com/')) { claudeCalls++; const body = JSON.parse(String(raw)); claudeReqs.push(body); const step = claudeScript.shift(); if (!step) throw new Error('unscripted claude call'); const r = step(body); return r instanceof Response ? r : J(r); }
   const body = raw ? JSON.parse(String(raw)) : {};
   if (u.includes('/contents/')) return J({content: files.get(u.split('/contents/')[1].split('?')[0])!.toString('base64')});
@@ -116,5 +116,46 @@ await send(msgText('add reel')); await wait(500);
 ok(claudeReqs[1].messages.at(-1).content[0].is_error === true && /Instagram/.test(claudeReqs[1].messages.at(-1).content[0].content), 'tool error is passed back to Claude so it can explain to the user');
 reset(); claudeScript = Array(9).fill(() => toolUse('list_content', {})); await send(msgText('loop forever')); await wait(1500);
 ok(/too many steps/.test(sent().at(-1)?.text ?? ''), 'runaway tool loop is stopped after 8 steps');
+// ---------- 9. group chat ----------
+const G = {id: -100777, type: 'supergroup'}; const pablo = {id: 5, username: 'pabsgv', first_name: 'Pablo'};
+const gmsg = (over: any, from: any = pablo) => msg({chat: G, ...over}, from);
+reset(); await send(gmsg({text: 'lol ok see you later'})); await wait();
+ok(claudeCalls === 0 && sent().length === 0, 'group: ordinary chat between members is ignored (no cost, no reply)');
+reset(); claudeScript = [() => say('Sure, what is the link?')]; await send(gmsg({text: '@luis_test_bot add a reel about Rioja'})); await wait();
+const gs = sent().at(-1); const sentText = JSON.stringify(claudeReqs[0]?.messages.at(-1).content);
+ok(claudeCalls === 1 && !/@luis_test_bot/.test(sentText) && /Pablo: add a reel about Rioja/.test(sentText), 'group: @mention is answered, mention stripped, speaker named');
+ok(gs?.chat_id === -100777 && gs.reply_parameters?.message_id, 'group: reply is threaded under the message');
+reset(); claudeScript = [() => say('Got it.')]; await send(gmsg({text: 'https://www.instagram.com/reel/GRP1/', reply_to_message: {text: 'What is the link?', from: {id: 999, is_bot: true}}})); await wait();
+ok(claudeCalls === 1, 'group: replying to one of the bot\'s messages is answered');
+reset(); await send(gmsg({text: 'https://www.instagram.com/reel/GRP2/', reply_to_message: {text: 'hi', from: {id: 5}}})); await wait();
+ok(claudeCalls === 0, 'group: replying to a person (not the bot) is ignored');
+reset(); await send(gmsg({text: '@luis_test_bot delete everything'}, {id: 42, username: 'intruder', first_name: 'Eve'})); await wait();
+ok(claudeCalls === 0 && sent().length === 0, 'group: a non-allowlisted member mentioning the bot is ignored');
+reset(); await send(gmsg({text: '/id@luis_test_bot'}, {id: 42, username: 'intruder', first_name: 'Eve'})); await wait();
+ok(/42/.test(sent()[0]?.text) && /-100777/.test(sent()[0]?.text) && claudeCalls === 0, 'group: /id@bot tells anyone their own ID and the group ID');
+reset(); await send(gmsg({text: '/start@some_other_bot'})); await wait();
+ok(sent().length === 0 && claudeCalls === 0, 'group: a command aimed at another bot is ignored');
+reset(); await send(gmsg({text: '/start@luis_test_bot'})); await wait();
+ok(/I can update the website/.test(sent()[0]?.text ?? '') && claudeCalls === 0, 'group: /start@bot shows the help text');
+reset(); claudeScript = [() => toolUse('delete_reel', {id: reels()[0].id}), () => say('Press the button.')]; await send(gmsg({text: '@luis_test_bot delete the newest reel'})); await wait(500);
+const gbtn = sent().at(-1).reply_markup.inline_keyboard[0][0]; const gcount = reels().length;
+reset(); await send({update_id: ++uid, callback_query: {id: 'g1', from: pablo, data: gbtn.callback_data, message: {message_id: 9, chat: G}}}); await wait(500);
+ok(reels().length === gcount - 1 && tg.some((t) => t.method === 'sendMessage' && t.body.chat_id === -100777), 'group: confirm button works and answers in the group');
+reset(); await send({update_id: ++uid, callback_query: {id: 'g2', from: {id: 42, username: 'intruder'}, data: `del:${reels()[0].id}`, message: {message_id: 9, chat: G}}}); await wait(300);
+ok(tg.length === 0, 'group: a non-allowlisted member pressing a button does nothing');
+
+// ---------- 10. scheduled messages to a group (weekly digest) ----------
+const {GET} = await import(R + 'src/app/api/cron/daily/route.ts');
+process.env.CRON_SECRET = 'cron'; process.env.TELEGRAM_NOTIFY_CHAT_IDS = '-100777,123';
+const cron = (q = '', auth = 'Bearer cron') => GET(new Request(`https://x/api/cron/daily${q}`, {headers: {authorization: auth}}));
+reset(); ok((await cron('?force=digest', 'Bearer wrong')).status === 403, 'cron: wrong secret -> 403');
+reset(); const cr = await (await cron('?force=digest')).json();
+ok(sent().some((m) => m.chat_id === -100777 && /Weekly website check-in/.test(m.text)), 'cron: digest reaches the group (negative chat id accepted)');
+ok(cr.done?.some((d: string) => /digest \(1\/2/.test(d)) && cr.errors?.length === 1, 'cron: one unreachable chat is reported but does not stop the others', JSON.stringify(cr));
+reset(); process.env.TELEGRAM_NOTIFY_CHAT_IDS = ''; process.env.TELEGRAM_ALLOWED_USERS = 'jajasaluu2,pabsgv,-100888,555';
+const {notifyChatIds} = await import(R + 'src/lib/agent/telegram.ts');
+ok(JSON.stringify(notifyChatIds()) === '[-100888,555]', 'notify falls back to numeric allowlist entries when no explicit chat is set');
+process.env.TELEGRAM_ALLOWED_USERS = 'jajasaluu2,pabsgv';
+
 console.log(`\ncommits made: ${commitLog.length}; content still valid JSON: ${['reels','tastings','bottle','about'].every(f => { try { JSON.parse(files.get(`content/${f}.json`)!.toString()); return true; } catch { return false; } })}`);
 setTimeout(() => process.exit(process.exitCode ?? 0), 100);
