@@ -5,6 +5,9 @@ import {getReels} from '@/lib/content';
 import {FadeUp} from '@/components/motion/fade-up';
 import {ReelsGrid} from '@/components/media/ReelsGrid';
 
+// Re-render periodically so scheduled reels appear automatically
+export const revalidate = 900;
+
 type Props = {
   params: Promise<{locale: Locale}>;
 };
