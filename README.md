@@ -8,7 +8,7 @@ A luxury editorial website for Luis Torres Catas, presenting wine through histor
 - **Styling:** Tailwind CSS with custom warm ivory/burgundy palette
 - **Fonts:** Cormorant Garamond (headings) + Inter (body) via next/font
 - **Animations:** Framer Motion (scroll-triggered fade-ins)
-- **CMS:** Sanity v3 (headless, hosted at luistorrescatas.sanity.studio)
+- **Content:** JSON files in `content/` + images in `public/uploads/` (edited by the Telegram agent or by hand)
 - **i18n:** next-intl (English + Spanish)
 - **Email:** Resend (contact form + newsletter signups)
 - **Deployment:** Vercel
@@ -22,19 +22,9 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) — you'll be redirected to `/en` or `/es` based on browser language.
 
-## Sanity Studio
+## Content
 
-The CMS is deployed at **https://luistorrescatas.sanity.studio/**
-
-To run the studio locally:
-```bash
-npx sanity dev
-```
-
-To deploy studio changes:
-```bash
-npx sanity deploy
-```
+All editable content lives in `content/` (`reels.json`, `about.json`) and is validated with zod in `src/lib/content/index.ts`. Images go in `public/uploads/`. Every change is a git commit, so it can be reverted with `git revert`. Pushing to `main` redeploys the site on Vercel.
 
 ## Folder Structure
 
@@ -60,12 +50,12 @@ src/
 ├── i18n/                   # next-intl request config
 ├── lib/
 │   ├── i18n/               # Locale routing config
-│   ├── sanity/             # Sanity client + GROQ queries
+│   ├── content/            # Content loader (reads /content JSON)
 │   └── seo/                # Metadata + JSON-LD generators
 └── messages/               # Translation files (en.json, es.json)
 
-sanity/
-└── schemas/                # Sanity schema definitions (reel, tasting, bottle, about)
+content/                   # reels.json, about.json (localized {en, es} fields)
+public/uploads/            # Uploaded images
 ```
 
 ## Environment Variables
@@ -73,8 +63,6 @@ sanity/
 Create a `.env.local` file in the project root:
 
 ```
-NEXT_PUBLIC_SANITY_PROJECT_ID=wzudpmcs
-NEXT_PUBLIC_SANITY_DATASET=production
 RESEND_API_KEY=your_resend_api_key
 ```
 

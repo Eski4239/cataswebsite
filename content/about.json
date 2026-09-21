@@ -1,0 +1,12 @@
+{
+  "portrait": "/uploads/about/portrait.jpg",
+  "philosophy": {
+    "en": "Hello, my name is Luis de Torres and I'm an art historian. Besides art, I also enjoy other fine things like wine. That's why I decided to create this project, in which I combine not only history but also oenology. With this project, I want to share historical accounts of wines that will be tasted and enjoyed at specialized tastings with people of all kinds, regardless of their wine experience. I hope to see you at a tasting soon, and I hope you enjoy this website.",
+    "es": "Hola, me llamo Luis de Torres  y soy Historiador del Arte. A parte del arte tambien me gustan otras cosas finas como el vino. Por ello decidi crear este proyecto, en el cual combino no solo la historia pero la enologia. Con este proyecto quiero poder enseñar a personas de todo tipo, tengan o no experiencia con el vino, relatos historicos de vinos que se probaran y degustaran en catas especializadas. Espero veros en una cata dentro de poco y disfrutad de esta web."
+  },
+  "timeline": [],
+  "quote": {
+    "en": "Vive la vida cañon!",
+    "es": "Vive la vida cañon!"
+  }
+}

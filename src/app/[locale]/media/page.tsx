@@ -1,7 +1,7 @@
-// Media page — fetches reels from Sanity and renders the Instagram embed grid
+// Media page — fetches reels from local content and renders the Instagram embed grid
 import {setRequestLocale, getTranslations} from 'next-intl/server';
 import type {Locale} from '@/lib/i18n/routing';
-import {getReels} from '@/lib/sanity/queries';
+import {getReels} from '@/lib/content';
 import {FadeUp} from '@/components/motion/fade-up';
 import {ReelsGrid} from '@/components/media/ReelsGrid';
 

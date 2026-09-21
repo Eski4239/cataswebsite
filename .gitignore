@@ -28,8 +28,6 @@ pnpm-debug.log*
 .DS_Store
 coverage/
 
-# sanity
-.sanity/
 
 # claude
-.claude/
+.claude/tsconfig.tsbuildinfo
