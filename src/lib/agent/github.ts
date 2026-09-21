@@ -11,7 +11,7 @@ function cfg() {
   };
 }
 
-async function gh<T>(path: string, init?: RequestInit): Promise<T> {
+async function gh<T>(path: string, init?: RequestInit, attempt = 0): Promise<T> {
   const {token, repo} = cfg();
   const res = await fetch(`${API}/repos/${repo}${path}`, {
     ...init,
@@ -24,6 +24,10 @@ async function gh<T>(path: string, init?: RequestInit): Promise<T> {
       ...init?.headers
     }
   });
+  if (res.status >= 500 && attempt < 2) {
+    await new Promise((r) => setTimeout(r, 400 * (attempt + 1)));
+    return gh<T>(path, init, attempt + 1);
+  }
   if (!res.ok) throw new Error(`GitHub ${init?.method ?? 'GET'} ${path} -> ${res.status} ${await res.text()}`);
   return res.json() as Promise<T>;
 }
@@ -37,8 +41,22 @@ export async function readJson<T>(path: string): Promise<T> {
 
 export type FileChange = {path: string; content: string | Buffer | null}; // null = delete
 
-/** Commit several file changes atomically as one commit. Returns the new commit sha. */
+/**
+ * Commit several file changes atomically as one commit. Returns the new commit sha.
+ * If someone else pushed in the meantime (non-fast-forward), it is rebuilt on the new head and retried.
+ */
 export async function commitFiles(message: string, files: FileChange[]): Promise<string> {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await commitOnce(message, files);
+    } catch (e) {
+      const raceLost = e instanceof Error && /git\/refs\/heads.* -> (409|422)/.test(e.message);
+      if (!raceLost || attempt >= 2) throw e;
+    }
+  }
+}
+
+async function commitOnce(message: string, files: FileChange[]): Promise<string> {
   const {branch} = cfg();
   const ref = await gh<{object: {sha: string}}>(`/git/ref/heads/${branch}`);
   const head = await gh<{tree: {sha: string}}>(`/git/commits/${ref.object.sha}`);

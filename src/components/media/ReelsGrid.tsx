@@ -6,6 +6,14 @@ import {useTranslations} from 'next-intl';
 import type {Reel} from '@/lib/content';
 import {FadeUp} from '@/components/motion/fade-up';
 
+const categoryLabelKey: Record<string, string> = {
+  History: 'history',
+  Regions: 'regions',
+  Grapes: 'grapes',
+  Tastings: 'tastings',
+  'Beginner Guides': 'beginnerGuides'
+};
+
 const categoryKeys = ['all', 'history', 'regions', 'grapes', 'tastings', 'beginnerGuides'] as const;
 
 export function ReelsGrid({reels}: {reels: Reel[]}) {
@@ -63,6 +71,9 @@ export function ReelsGrid({reels}: {reels: Reel[]}) {
       </div>
 
       <div className="mx-auto max-w-7xl px-6 pb-24 md:px-10">
+        {filtered.length === 0 && (
+          <p className="py-12 text-center font-heading text-2xl italic text-muted">{t('emptyCategory')}</p>
+        )}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map((reel) => (
             <FadeUp key={reel.instagramUrl}>
@@ -84,7 +95,9 @@ export function ReelsGrid({reels}: {reels: Reel[]}) {
                   />
                 </div>
                 <div className="mt-4">
-                  <p className="meta-label text-burgundy">{reel.category}</p>
+                  <p className="meta-label text-burgundy">
+                    {categoryLabelKey[reel.category] ? t(`filters.${categoryLabelKey[reel.category]}`) : reel.category}
+                  </p>
                   <h3 className="mt-2 font-heading text-2xl text-charcoal">
                     {reel.title}
                   </h3>

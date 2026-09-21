@@ -1,5 +1,8 @@
 // Telegram webhook — receives messages from Luis and his brother and lets the agent update the site.
+import {waitUntil} from '@vercel/functions';
 import {runAgent} from '@/lib/agent/agent';
+import {friendlyError} from '@/lib/agent/errors';
+import {alreadyHandled, getHistory, remember} from '@/lib/agent/history';
 import {runConfirmed, type ToolContext} from '@/lib/agent/tools';
 import {
   answerCallback,
@@ -39,16 +42,24 @@ async function handleMessage(msg: TgMessage) {
     await sendMessage(chatId, HELP);
     return;
   }
-  if (msg.video || msg.document || msg.voice) {
+  const imageDoc = msg.document?.mime_type?.startsWith('image/') ? msg.document : undefined;
+  if (msg.video || msg.voice || (msg.document && !imageDoc)) {
     await sendMessage(chatId, 'I can only handle text and photos for now. For videos, post the reel on Instagram and send me the link.');
+    return;
+  }
+  if (!text && !msg.photo?.length && !imageDoc) {
+    await sendMessage(chatId, 'I can only read text and photos. Tell me what you would like to change on the website, or send /help.');
     return;
   }
 
   await sendTyping(chatId);
   const ctx: ToolContext = {chatId, confirmations: []};
-  if (msg.photo?.length) ctx.photo = await downloadFile(msg.photo[msg.photo.length - 1].file_id);
+  const photoId = msg.photo?.length ? msg.photo[msg.photo.length - 1].file_id : imageDoc?.file_id;
+  if (photoId) ctx.photo = await downloadFile(photoId);
 
-  const reply = await runAgent(text, ctx, msg.reply_to_message?.text ?? msg.reply_to_message?.caption);
+  const userText = text.slice(0, 8000);
+  const reply = await runAgent(userText, ctx, msg.reply_to_message?.text ?? msg.reply_to_message?.caption, getHistory(chatId));
+  remember(chatId, (ctx.photo ? '[sent a photo] ' : '') + userText, reply);
 
   const buttons = [
     ...ctx.confirmations.map((c) => ({text: c.label, callback_data: c.data})),
@@ -64,24 +75,28 @@ async function handleCallback(cb: NonNullable<TgUpdate['callback_query']>) {
   await sendMessage(cb.message.chat.id, await runConfirmed(cb.data));
 }
 
+async function processUpdate(update: TgUpdate) {
+  const chatId = update.message?.chat.id ?? update.callback_query?.message?.chat.id;
+  const from = update.message?.from ?? update.callback_query?.from;
+  try {
+    if (update.message) await handleMessage(update.message);
+    else if (update.callback_query) await handleCallback(update.callback_query);
+  } catch (e) {
+    console.error('telegram agent error', e);
+    if (chatId && isAllowed(from)) await sendMessage(chatId, friendlyError(e)).catch(() => {});
+  }
+}
+
 export async function POST(req: Request) {
   const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
   if (!secret || req.headers.get('x-telegram-bot-api-secret-token') !== secret) {
     return new Response('forbidden', {status: 403});
   }
 
-  const update = (await req.json()) as TgUpdate;
-  const chatId = update.message?.chat.id ?? update.callback_query?.message?.chat.id;
-  try {
-    if (update.message) await handleMessage(update.message);
-    else if (update.callback_query) await handleCallback(update.callback_query);
-  } catch (e) {
-    console.error('telegram agent error', e);
-    // Always answer 200 so Telegram does not retry and repeat the action.
-    const from = update.message?.from ?? update.callback_query?.from;
-    if (chatId && isAllowed(from)) {
-      await sendMessage(chatId, 'Something went wrong on my side and nothing was changed. Please try again in a moment.').catch(() => {});
-    }
-  }
+  const update = (await req.json().catch(() => null)) as TgUpdate | null;
+  if (!update || typeof update.update_id !== 'number' || alreadyHandled(update.update_id)) return Response.json({ok: true});
+
+  // Answer Telegram immediately (so it never retries and repeats an action) and keep working in the background.
+  waitUntil(processUpdate(update));
   return Response.json({ok: true});
 }

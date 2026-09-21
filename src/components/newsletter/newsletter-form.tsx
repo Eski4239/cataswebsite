@@ -6,14 +6,19 @@ import {useTranslations} from 'next-intl';
 export function NewsletterForm() {
   const t = useTranslations('newsletter');
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus('sending');
-    await fetch('/api/newsletter', {method: 'POST', body: JSON.stringify({email})});
-    setStatus('sent');
-    setEmail('');
+    try {
+      const res = await fetch('/api/newsletter', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({email})});
+      if (!res.ok) throw new Error(String(res.status));
+      setStatus('sent');
+      setEmail('');
+    } catch {
+      setStatus('error');
+    }
   }
 
   if (status === 'sent') {
@@ -21,7 +26,7 @@ export function NewsletterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mx-auto mt-8 flex max-w-md gap-3">
+    <form onSubmit={handleSubmit} className="mx-auto mt-8 flex max-w-md flex-wrap gap-3">
       <input
         type="email"
         required
@@ -37,6 +42,7 @@ export function NewsletterForm() {
       >
         {status === 'sending' ? t('sending') : t('button')}
       </button>
+      {status === 'error' && <p className="mt-3 basis-full text-sm text-red-700">{t('error')}</p>}
     </form>
   );
 }

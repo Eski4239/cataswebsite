@@ -31,7 +31,7 @@ Rules:
 - Changes go live about a minute after saving. Say so briefly.
 - Reply in the language the user wrote in, in a few short lines, plain text, no markdown. After a change, say exactly what you saved (both language versions when text is involved) so they can check it.`;
 
-export async function runAgent(text: string, ctx: ToolContext, replyTo?: string): Promise<string> {
+export async function runAgent(text: string, ctx: ToolContext, replyTo?: string, history: {user: string; assistant: string}[] = []): Promise<string> {
   const content: Anthropic.ContentBlockParam[] = [];
   if (ctx.photo) {
     const small = await sharp(ctx.photo).rotate().resize({width: 1024, withoutEnlargement: true}).jpeg({quality: 70}).toBuffer();
@@ -42,7 +42,13 @@ export async function runAgent(text: string, ctx: ToolContext, replyTo?: string)
     text: `[Now: ${nowInMadrid()} Madrid time]\n` + (replyTo ? `[Replying to earlier message: "${replyTo.slice(0, 500)}"]\n` : '') + (text || '(photo attached, no caption)')
   });
 
-  const messages: Anthropic.MessageParam[] = [{role: 'user', content}];
+  const messages: Anthropic.MessageParam[] = [
+    ...history.flatMap((h): Anthropic.MessageParam[] => [
+      {role: 'user', content: h.user},
+      {role: 'assistant', content: h.assistant}
+    ]),
+    {role: 'user', content}
+  ];
 
   for (let step = 0; step < MAX_STEPS; step++) {
     const res = await client.messages.create({

@@ -30,7 +30,8 @@
     "placeholder": "Tu correo electrónico",
     "button": "Suscribirse",
     "sending": "Enviando…",
-    "success": "Gracias — bienvenido al diario."
+    "success": "Gracias — bienvenido al diario.",
+    "error": "Algo salió mal. Inténtalo de nuevo."
   },
   "media": {
     "heading": "Historias en Movimiento",
@@ -43,7 +44,8 @@
       "grapes": "Uvas",
       "tastings": "Catas",
       "beginnerGuides": "Guías Iniciales"
-    }
+    },
+    "emptyCategory": "Aún no hay reels en esta categoría."
   },
   "tastings": {
     "heading": "Próximas Experiencias",
@@ -65,5 +67,23 @@
   },
   "footer": {
     "copyright": "© {year} Catas Luis de Torres · Narrativa Cinematográfica del Vino"
+  },
+  "contact": {
+    "heading": "Contacto",
+    "subheading": "Colaboraciones, catas privadas, prensa: escríbenos.",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "message": "Mensaje",
+    "submit": "Expresar interés",
+    "sending": "Enviando…",
+    "success": "Gracias, tu mensaje ha sido enviado. Nos pondremos en contacto pronto.",
+    "error": "Algo salió mal. Inténtalo de nuevo o escribe a luis@luistorrescatas.com.",
+    "categories": {
+      "collaborations": "Colaboraciones",
+      "privateTastings": "Catas privadas",
+      "media": "Medios",
+      "partnerships": "Alianzas",
+      "general": "Consulta general"
+    }
   }
 }
