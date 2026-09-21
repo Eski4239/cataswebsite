@@ -1,5 +1,20 @@
 [
   {
+    "id": "kouloura-santorini-s-ancient-3k42",
+    "title": {
+      "en": "Kouloura: Santorini's Ancient Vine-Weaving Method",
+      "es": "Kouloura: el antiguo método de tejer vides en Santorini"
+    },
+    "description": {
+      "en": "On the volcanic island of Santorini, growers weave vines into low basket shapes called kouloura, protecting the grapes from fierce winds and intense sun. A beautiful, centuries-old answer to a harsh landscape.",
+      "es": "En la isla volcánica de Santorini, los viticultores tejen las vides en forma de cesta baja llamada kouloura, protegiendo las uvas de los fuertes vientos y el intenso sol. Una hermosa respuesta, con siglos de historia, a un paisaje difícil."
+    },
+    "instagramUrl": "https://www.instagram.com/reel/DZZ_K0jKc83/",
+    "category": "Grapes",
+    "featured": false,
+    "publishedAt": "2026-09-21T10:20:28.510Z"
+  },
+  {
     "id": "7a916e3d-ae06-4bc6-8540-73e9b68d762c",
     "title": {
       "en": "The Space Grapes",
