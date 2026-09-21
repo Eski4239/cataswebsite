@@ -3,7 +3,7 @@ import {NextIntlClientProvider} from 'next-intl';
 import {getMessages, setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 
-import {locales} from '@/lib/i18n/routing';
+import {isLocale, locales} from '@/lib/i18n/routing';
 import {Navbar} from '@/components/layout/navbar';
 import {Footer} from '@/components/layout/footer';
 
@@ -20,7 +20,7 @@ export default async function LocaleLayout({
 }) {
   const {locale} = await params;
 
-  if (!locales.includes(locale as any)) {
+  if (!isLocale(locale)) {
     notFound();
   }
 

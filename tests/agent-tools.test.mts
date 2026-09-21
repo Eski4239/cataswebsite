@@ -19,13 +19,13 @@ globalThis.fetch = (async (url: string, init?: RequestInit) => {
   if (u.endsWith('/git/blobs')) { const id = `b${blobs.size}`; blobs.set(id, Buffer.from(body.content, 'base64')); return json({sha: id}); }
   if (u.endsWith('/git/trees')) { const snap = new Map(files); commits.push({message: '', before: snap}); for (const t of body.tree) t.sha === null ? files.delete(t.path) : files.set(t.path, blobs.get(t.sha)!); return json({sha: `t${n + 1}`}); }
   if (u.endsWith('/git/commits') && m === 'POST') { commits[commits.length - 1].message = body.message; headMsg = body.message; n++; return json({sha: `h${n}`}); }
-  if (u.includes('/git/commits/h') && m === 'GET') { const i = Number(u.split('/h').pop()); return json({tree: {sha: 't'}, message: headMsg, parents: [{sha: 'p'}]}); }
+  if (u.includes('/git/commits/h') && m === 'GET') { return json({tree: {sha: 't'}, message: headMsg, parents: [{sha: 'p'}]}); }
   if (u.includes('/git/refs/heads') && m === 'PATCH') return json({});
   throw new Error('unmocked ' + m + ' ' + u);
 }) as typeof fetch;
 
 const {runTool, runConfirmed} = await import(R + 'src/lib/agent/tools.ts');
-const {madridLocalToIso, madridParts} = await import(R + 'src/lib/agent/time.ts');
+const {madridLocalToIso} = await import(R + 'src/lib/agent/time.ts');
 const {isAllowed, notifyChatIds} = await import(R + 'src/lib/agent/telegram.ts');
 const {buildDigest} = await import(R + 'src/lib/agent/digest.ts');
 const ok = (c: boolean, msg: string) => { console.log(c ? 'PASS' : 'FAIL', msg); if (!c) process.exitCode = 1; };

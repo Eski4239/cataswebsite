@@ -6,6 +6,12 @@ import {useTranslations} from 'next-intl';
 import type {Reel} from '@/lib/content';
 import {FadeUp} from '@/components/motion/fade-up';
 
+declare global {
+  interface Window {
+    instgrm?: {Embeds: {process: () => void}};
+  }
+}
+
 const categoryLabelKey: Record<string, string> = {
   History: 'history',
   Regions: 'regions',
@@ -28,8 +34,8 @@ export function ReelsGrid({reels}: {reels: Reel[]}) {
         script.src = '//www.instagram.com/embed.js';
         script.async = true;
         document.body.appendChild(script);
-      } else if ((window as any).instgrm) {
-        (window as any).instgrm.Embeds.process();
+      } else if (window.instgrm) {
+        window.instgrm.Embeds.process();
       }
     }
   }, [active]);
