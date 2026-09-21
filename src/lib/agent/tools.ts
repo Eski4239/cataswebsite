@@ -48,7 +48,10 @@ const category = {type: 'string', enum: [...REEL_CATEGORIES]};
 const usePhoto = {type: 'boolean', description: 'Use the photo attached to this message as the image'};
 const idOnly = {type: 'object' as const, properties: {id: {type: 'string'}}, required: ['id']};
 
-export const tools: Anthropic.Tool[] = [
+/** The newsletter tool is only offered once Resend is configured (RESEND_API_KEY + RESEND_AUDIENCE_ID). */
+export const newsletterEnabled = () => !!process.env.RESEND_API_KEY && !!process.env.RESEND_AUDIENCE_ID;
+
+const allTools: Anthropic.Tool[] = [
   {
     name: 'list_content',
     description: 'Show everything currently on the website: reels (live and scheduled), tastings, bottle of the week and the about page.',
@@ -188,6 +191,8 @@ export const tools: Anthropic.Tool[] = [
     input_schema: {type: 'object', properties: {}}
   }
 ];
+
+export const tools: Anthropic.Tool[] = allTools.filter((t) => t.name !== 'draft_newsletter' || newsletterEnabled());
 
 // ---------- helpers ----------
 

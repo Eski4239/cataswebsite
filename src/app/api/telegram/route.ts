@@ -25,7 +25,6 @@ const HELP =
   '• Tastings: tell me the date, city and details (and send a photo for the cover).\n' +
   '• Bottle of the week: tell me the wine and its story (a photo is optional).\n' +
   '• About page text and portrait photo.\n' +
-  '• Newsletter: tell me what to announce. I draft it and you press Send.\n' +
   '• "stats" for visitor numbers, "backup" for a full copy, "show content" to see what is live, "undo" to reverse my last change.';
 
 async function handleMessage(msg: TgMessage) {

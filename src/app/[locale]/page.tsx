@@ -4,7 +4,6 @@ import {buildMetadata} from '@/lib/seo/metadata';
 import Link from 'next/link';
 import {FadeUp} from '@/components/motion/fade-up';
 import {getBottleOfWeek, getTastings} from '@/lib/content';
-import {NewsletterForm} from '@/components/newsletter/newsletter-form';
 
 // Re-render periodically so scheduled reels appear and past tastings drop off
 export const revalidate = 900;
@@ -26,7 +25,6 @@ export default async function Home({params}: Props) {
   const philosophy = await getTranslations('philosophy');
   const bottle = await getTranslations('bottle');
   const tastingsHome = await getTranslations('tastingsHome');
-  const newsletter = await getTranslations('newsletter');
   const bottleContent = await getBottleOfWeek(locale);
   const upcoming = (await getTastings(locale)).slice(0, 2);
 
@@ -134,21 +132,6 @@ export default async function Home({params}: Props) {
                 ))}
               </div>
             )}
-          </div>
-        </FadeUp>
-      </section>
-
-      {/* NEWSLETTER */}
-      <section className="section-shell">
-        <FadeUp>
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="font-heading text-4xl font-light text-charcoal md:text-5xl">
-              {newsletter('heading')}
-            </h2>
-            <p className="mt-4 text-muted">
-              {newsletter('subheading')}
-            </p>
-            <NewsletterForm />
           </div>
         </FadeUp>
       </section>

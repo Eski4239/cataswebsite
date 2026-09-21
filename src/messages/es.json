@@ -22,16 +22,7 @@
   "tastingsHome": {
     "heading": "Próximas Experiencias",
     "requestInvitation": "Solicitar Invitación",
-    "empty": "Pronto anunciaremos nuevas experiencias. Únete al journal para enterarte antes."
-  },
-  "newsletter": {
-    "heading": "Únete al Diario",
-    "subheading": "Historias, crónicas y notas de cata — entregadas con intención.",
-    "placeholder": "Tu correo electrónico",
-    "button": "Suscribirse",
-    "sending": "Enviando…",
-    "success": "Gracias — bienvenido al diario.",
-    "error": "Algo salió mal. Inténtalo de nuevo."
+    "empty": "Pronto anunciaremos nuevas experiencias. Síguenos en Instagram para enterarte antes."
   },
   "media": {
     "heading": "Historias en Movimiento",
@@ -59,7 +50,7 @@
       "emailSubject": "Reserva de Cata - {title}",
       "emailBody": "Me gustaría reservar {quantity} plaza(s) para {title} el {date}."
     },
-    "empty": "Pronto anunciaremos nuevas experiencias. Únete al journal para enterarte antes."
+    "empty": "Pronto anunciaremos nuevas experiencias. Síguenos en Instagram para enterarte antes."
   },
   "about": {
     "title": "Sobre Luis",
@@ -70,20 +61,7 @@
   },
   "contact": {
     "heading": "Contacto",
-    "subheading": "Colaboraciones, catas privadas, prensa: escríbenos.",
-    "name": "Nombre",
-    "email": "Correo electrónico",
-    "message": "Mensaje",
-    "submit": "Expresar interés",
-    "sending": "Enviando…",
-    "success": "Gracias, tu mensaje ha sido enviado. Nos pondremos en contacto pronto.",
-    "error": "Algo salió mal. Inténtalo de nuevo o escribe a luis@luistorrescatas.com.",
-    "categories": {
-      "collaborations": "Colaboraciones",
-      "privateTastings": "Catas privadas",
-      "media": "Medios",
-      "partnerships": "Alianzas",
-      "general": "Consulta general"
-    }
+    "subheading": "Para colaboraciones, catas privadas y prensa, escríbenos por Instagram.",
+    "instagramCta": "Escríbenos por Instagram"
   }
 }
