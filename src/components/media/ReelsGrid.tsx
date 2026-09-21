@@ -3,7 +3,7 @@
 
 import {useEffect, useState} from 'react';
 import {useTranslations} from 'next-intl';
-import type {Reel} from '@/lib/sanity/queries';
+import type {Reel} from '@/lib/content';
 import {FadeUp} from '@/components/motion/fade-up';
 
 const categoryKeys = ['all', 'history', 'regions', 'grapes', 'tastings', 'beginnerGuides'] as const;

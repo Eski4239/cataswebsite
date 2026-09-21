@@ -1,7 +1,6 @@
 import {getTranslations} from 'next-intl/server';
 import Image from 'next/image';
-import {getAboutContent} from '@/lib/sanity/queries';
-import {urlFor} from '@/lib/sanity/client';
+import {getAboutContent} from '@/lib/content';
 
 export default async function AboutPage({params}: {params: Promise<{locale: string}>}) {
   const {locale} = await params;
@@ -24,7 +23,7 @@ export default async function AboutPage({params}: {params: Promise<{locale: stri
       {content.portrait && (
         <div className="mt-10 overflow-hidden rounded-2xl border border-border">
           <Image
-            src={urlFor(content.portrait).width(900).height(600).url()}
+            src={content.portrait}
             alt="Luis Torres"
             width={900}
             height={600}
