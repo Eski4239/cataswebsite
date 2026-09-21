@@ -13,7 +13,7 @@ const csp = [
   "img-src 'self' data: blob: https://images.unsplash.com https://*.cdninstagram.com",
   "font-src 'self' data:",
   "connect-src 'self' https://www.instagram.com",
-  "frame-src https://www.instagram.com https://instagram.com",
+  'frame-src https://www.instagram.com https://instagram.com',
   "frame-ancestors 'self'",
   "form-action 'self'",
   "base-uri 'self'",

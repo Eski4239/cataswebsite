@@ -3,9 +3,15 @@ export const TZ = 'Europe/Madrid';
 
 /** Current date/time in Madrid, e.g. "Monday 21 September 2026, 14:05". Given to the model so it can resolve "next Friday". */
 export const nowInMadrid = () =>
-  new Intl.DateTimeFormat('en-GB', {timeZone: TZ, weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'}).format(
-    new Date()
-  );
+  new Intl.DateTimeFormat('en-GB', {
+    timeZone: TZ,
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).format(new Date());
 
 /** Madrid weekday (1 = Monday ... 7 = Sunday) and day of month, for the cron dispatcher. */
 export function madridParts(d = new Date()) {
@@ -23,7 +29,15 @@ export function madridLocalToIso(local: string): string {
   const asUtc = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]);
   const offsetAt = (t: number) => {
     const parts = Object.fromEntries(
-      new Intl.DateTimeFormat('en-US', {timeZone: TZ, hourCycle: 'h23', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'})
+      new Intl.DateTimeFormat('en-US', {
+        timeZone: TZ,
+        hourCycle: 'h23',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+      })
         .formatToParts(new Date(t))
         .map((x) => [x.type, x.value])
     );

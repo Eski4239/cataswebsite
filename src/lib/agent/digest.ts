@@ -6,7 +6,10 @@ import type {ReelRecord, TastingRecord} from '../content/schema';
 const DAY = 86_400_000;
 
 export async function buildDigest(): Promise<string> {
-  const [reels, tastings] = await Promise.all([readJson<ReelRecord[]>('content/reels.json'), readJson<TastingRecord[]>('content/tastings.json')]);
+  const [reels, tastings] = await Promise.all([
+    readJson<ReelRecord[]>('content/reels.json'),
+    readJson<TastingRecord[]>('content/tastings.json')
+  ]);
   const now = Date.now();
   const live = reels.filter((r) => Date.parse(r.publishedAt) <= now).sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
   const scheduled = reels.filter((r) => Date.parse(r.publishedAt) > now);

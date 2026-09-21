@@ -7,7 +7,8 @@ const siteUrl = 'https://luistorrescatas.com';
 export function buildMetadata(locale: Locale, path = '', title?: string, description?: string): Metadata {
   const canonical = `${siteUrl}/${locale}${path}`;
   const defaultTitle = 'Catas Luis de Torres | Cinematic Wine Storytelling';
-  const defaultDescription = 'A cinematic luxury editorial platform exploring wine through stories, history, travel, and private tasting experiences.';
+  const defaultDescription =
+    'A cinematic luxury editorial platform exploring wine through stories, history, travel, and private tasting experiences.';
 
   return {
     metadataBase: new URL(siteUrl),

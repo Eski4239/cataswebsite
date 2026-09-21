@@ -1,6 +1,6 @@
 // Root redirect — detects browser language and redirects "/" to /en or /es
-import { redirect } from 'next/navigation';
-import { headers } from 'next/headers';
+import {redirect} from 'next/navigation';
+import {headers} from 'next/headers';
 
 export default async function RootPage() {
   const headersList = await headers();

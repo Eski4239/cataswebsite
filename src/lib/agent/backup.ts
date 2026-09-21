@@ -11,7 +11,8 @@ export async function createBackup(chatIds: number[]): Promise<string> {
   const caption = `Website backup ${date} (restore point: git tag ${name}, commit ${sha.slice(0, 7)})`;
   const results = await Promise.allSettled(chatIds.map((id) => sendDocument(id, zip, `${name}.zip`, caption)));
   // One unreachable chat must not stop the others; only fail if nobody received it.
-  if (chatIds.length && results.every((r) => r.status === 'rejected')) throw new Error('Telegram: the backup could not be delivered to any chat');
+  if (chatIds.length && results.every((r) => r.status === 'rejected'))
+    throw new Error('Telegram: the backup could not be delivered to any chat');
   return name;
 }
 

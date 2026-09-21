@@ -30,7 +30,12 @@ Rules:
 - Changes go live about a minute after saving. Say so briefly.
 - Reply in the language the user wrote in, in a few short lines, plain text, no markdown. After a change, say exactly what you saved (both language versions when text is involved) so they can check it.`;
 
-export async function runAgent(text: string, ctx: ToolContext, replyTo?: string, history: {user: string; assistant: string}[] = []): Promise<string> {
+export async function runAgent(
+  text: string,
+  ctx: ToolContext,
+  replyTo?: string,
+  history: {user: string; assistant: string}[] = []
+): Promise<string> {
   const content: Anthropic.ContentBlockParam[] = [];
   if (ctx.photo) {
     const small = await sharp(ctx.photo).rotate().resize({width: 1024, withoutEnlargement: true}).jpeg({quality: 70}).toBuffer();
@@ -38,7 +43,10 @@ export async function runAgent(text: string, ctx: ToolContext, replyTo?: string,
   }
   content.push({
     type: 'text',
-    text: `[Now: ${nowInMadrid()} Madrid time]\n` + (replyTo ? `[Replying to earlier message: "${replyTo.slice(0, 500)}"]\n` : '') + (text || '(photo attached, no caption)')
+    text:
+      `[Now: ${nowInMadrid()} Madrid time]\n` +
+      (replyTo ? `[Replying to earlier message: "${replyTo.slice(0, 500)}"]\n` : '') +
+      (text || '(photo attached, no caption)')
   });
 
   const messages: Anthropic.MessageParam[] = [
@@ -64,7 +72,13 @@ export async function runAgent(text: string, ctx: ToolContext, replyTo?: string,
     messages.push({role: 'assistant', content: res.content});
 
     if (res.stop_reason !== 'tool_use') {
-      return res.content.filter((b): b is Anthropic.TextBlock => b.type === 'text').map((b) => b.text).join('\n').trim() || 'Done.';
+      return (
+        res.content
+          .filter((b): b is Anthropic.TextBlock => b.type === 'text')
+          .map((b) => b.text)
+          .join('\n')
+          .trim() || 'Done.'
+      );
     }
 
     const results: Anthropic.ToolResultBlockParam[] = [];

@@ -34,7 +34,13 @@ export async function createDraft(subject: Localized, body: Localized) {
   const contacts = await resend.contacts.list({audienceId});
   const subscribers = contacts.data?.data.filter((c) => !c.unsubscribed).length ?? 0;
   if (subscribers === 0) throw new Error('There are no subscribers yet, so there is nobody to send to.');
-  const created = await resend.broadcasts.create({audienceId, from: FROM, subject: subj, html, name: `agent ${new Date().toISOString().slice(0, 10)}`});
+  const created = await resend.broadcasts.create({
+    audienceId,
+    from: FROM,
+    subject: subj,
+    html,
+    name: `agent ${new Date().toISOString().slice(0, 10)}`
+  });
   if (created.error || !created.data) throw new Error(`Could not create draft: ${created.error?.message}`);
   return {id: created.data.id, subscribers};
 }

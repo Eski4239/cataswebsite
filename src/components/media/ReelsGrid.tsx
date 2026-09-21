@@ -45,9 +45,7 @@ export function ReelsGrid({reels}: {reels: Reel[]}) {
   if (reels.length === 0) {
     return (
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-10">
-        <p className="text-center font-heading text-2xl italic text-muted">
-          {t('empty')}
-        </p>
+        <p className="text-center font-heading text-2xl italic text-muted">{t('empty')}</p>
       </div>
     );
   }
@@ -77,9 +75,7 @@ export function ReelsGrid({reels}: {reels: Reel[]}) {
       </div>
 
       <div className="mx-auto max-w-7xl px-6 pb-24 md:px-10">
-        {filtered.length === 0 && (
-          <p className="py-12 text-center font-heading text-2xl italic text-muted">{t('emptyCategory')}</p>
-        )}
+        {filtered.length === 0 && <p className="py-12 text-center font-heading text-2xl italic text-muted">{t('emptyCategory')}</p>}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
           {filtered.map((reel) => (
             <FadeUp key={reel.instagramUrl}>
@@ -96,7 +92,7 @@ export function ReelsGrid({reels}: {reels: Reel[]}) {
                       margin: 0,
                       maxWidth: '400px',
                       width: '100%',
-                      padding: 0,
+                      padding: 0
                     }}
                   />
                 </div>
@@ -104,12 +100,8 @@ export function ReelsGrid({reels}: {reels: Reel[]}) {
                   <p className="meta-label text-burgundy">
                     {categoryLabelKey[reel.category] ? t(`filters.${categoryLabelKey[reel.category]}`) : reel.category}
                   </p>
-                  <h3 className="mt-2 font-heading text-2xl text-charcoal">
-                    {reel.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">
-                    {reel.description}
-                  </p>
+                  <h3 className="mt-2 font-heading text-2xl text-charcoal">{reel.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">{reel.description}</p>
                 </div>
               </article>
             </FadeUp>

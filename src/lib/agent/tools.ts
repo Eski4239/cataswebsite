@@ -91,7 +91,11 @@ const allTools: Anthropic.Tool[] = [
       required: ['id']
     }
   },
-  {name: 'delete_reel', description: 'Request deletion of a reel. Needs a confirmation button press; nothing is deleted until then.', input_schema: idOnly},
+  {
+    name: 'delete_reel',
+    description: 'Request deletion of a reel. Needs a confirmation button press; nothing is deleted until then.',
+    input_schema: idOnly
+  },
   {
     name: 'add_tasting',
     description:
@@ -318,8 +322,16 @@ export async function runTool(name: string, input: unknown, ctx: ToolContext): P
         publishedAt
       });
       const scheduled = publishedAt > new Date().toISOString();
-      ctx.lastSha = await commitFiles(`agent: ${scheduled ? 'schedule' : 'add'} reel "${a.title.en}"`, [{path: REELS, content: asJson([reel, ...reels])}]);
-      return {ok: true, id: reel.id, scheduled, publishedAt, note: scheduled ? 'It will appear automatically at that time (within about 15 minutes of it).' : LIVE_SOON};
+      ctx.lastSha = await commitFiles(`agent: ${scheduled ? 'schedule' : 'add'} reel "${a.title.en}"`, [
+        {path: REELS, content: asJson([reel, ...reels])}
+      ]);
+      return {
+        ok: true,
+        id: reel.id,
+        scheduled,
+        publishedAt,
+        note: scheduled ? 'It will appear automatically at that time (within about 15 minutes of it).' : LIVE_SOON
+      };
     }
     case 'update_reel': {
       const {id, publishAt, ...changes} = updateReelSchema.parse(input);
@@ -333,7 +345,10 @@ export async function runTool(name: string, input: unknown, ctx: ToolContext): P
     }
     case 'delete_reel': {
       const {id} = idSchema.parse(input);
-      const reel = z.array(reelSchema).parse(await readJson(REELS)).find((r) => r.id === id);
+      const reel = z
+        .array(reelSchema)
+        .parse(await readJson(REELS))
+        .find((r) => r.id === id);
       if (!reel) throw new Error(`No reel with id ${id}.`);
       ctx.confirmations.push({label: `🗑 Delete reel "${reel.title.en}"`, data: `del:${id}`});
       return {status: 'awaiting_confirmation', note: 'A confirm button was sent. Nothing is deleted until the user presses it.'};
@@ -360,12 +375,18 @@ export async function runTool(name: string, input: unknown, ctx: ToolContext): P
       const photo = withPhoto ? await savePhoto(ctx, 'tastings', slug(tastings[i].title.en) || 'tasting') : undefined;
       const files: FileChange[] = photo ? [photo.file, ...dropOld(tastings[i].image)] : [];
       tastings[i] = tastingSchema.parse({...tastings[i], ...optional(changes), ...(photo ? {image: photo.url} : {})});
-      ctx.lastSha = await commitFiles(`agent: update tasting "${tastings[i].title.en}"`, [{path: TASTINGS, content: asJson(tastings)}, ...files]);
+      ctx.lastSha = await commitFiles(`agent: update tasting "${tastings[i].title.en}"`, [
+        {path: TASTINGS, content: asJson(tastings)},
+        ...files
+      ]);
       return {ok: true, note: LIVE_SOON};
     }
     case 'delete_tasting': {
       const {id} = idSchema.parse(input);
-      const tasting = z.array(tastingSchema).parse(await readJson(TASTINGS)).find((t) => t.id === id);
+      const tasting = z
+        .array(tastingSchema)
+        .parse(await readJson(TASTINGS))
+        .find((t) => t.id === id);
       if (!tasting) throw new Error(`No tasting with id ${id}.`);
       ctx.confirmations.push({label: `🗑 Delete tasting "${tasting.title.en}"`, data: `delt:${id}`});
       return {status: 'awaiting_confirmation', note: 'A confirm button was sent. Nothing is deleted until the user presses it.'};
@@ -412,7 +433,11 @@ export async function runTool(name: string, input: unknown, ctx: ToolContext): P
         {label: `✅ Send to ${draft.subscribers} subscriber${draft.subscribers === 1 ? '' : 's'}`, data: `nl:${draft.id}`},
         {label: '✖ Discard draft', data: `nlx:${draft.id}`}
       );
-      return {status: 'awaiting_confirmation', subscribers: draft.subscribers, note: 'Show the user the full subject and both language versions so they can review, then tell them to press Send or Discard. Nothing has been emailed.'};
+      return {
+        status: 'awaiting_confirmation',
+        subscribers: draft.subscribers,
+        note: 'Show the user the full subject and both language versions so they can review, then tell them to press Send or Discard. Nothing has been emailed.'
+      };
     }
     case 'site_stats': {
       const {days} = z.object({days: z.number().optional()}).parse(input);
@@ -452,7 +477,9 @@ export async function runConfirmed(data: string): Promise<string> {
     const tastings = z.array(tastingSchema).parse(await readJson(TASTINGS));
     const tasting = tastings.find((t) => t.id === arg);
     if (!tasting) return 'That tasting was already gone.';
-    await commitFiles(`agent: delete tasting "${tasting.title.en}"`, [{path: TASTINGS, content: asJson(tastings.filter((t) => t.id !== arg))}]);
+    await commitFiles(`agent: delete tasting "${tasting.title.en}"`, [
+      {path: TASTINGS, content: asJson(tastings.filter((t) => t.id !== arg))}
+    ]);
     return `Deleted tasting "${tasting.title.en}". Say "undo" if that was a mistake.`;
   }
   if (kind === 'nl') return sendDraft(arg);

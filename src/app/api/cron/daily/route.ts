@@ -20,7 +20,8 @@ export async function GET(req: Request) {
   const done: string[] = [];
   const errors: string[] = [];
 
-  if (chats.length === 0) return Response.json({ok: false, error: 'No numeric Telegram IDs in TELEGRAM_ALLOWED_USERS or TELEGRAM_NOTIFY_CHAT_IDS'});
+  if (chats.length === 0)
+    return Response.json({ok: false, error: 'No numeric Telegram IDs in TELEGRAM_ALLOWED_USERS or TELEGRAM_NOTIFY_CHAT_IDS'});
 
   if (force === 'digest' || (!force && weekday === 1)) {
     try {

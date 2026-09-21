@@ -37,8 +37,7 @@ export async function getBotInfo() {
 
 export const sendTyping = (chatId: number) => call('sendChatAction', {chat_id: chatId, action: 'typing'});
 
-export const answerCallback = (id: string, text?: string) =>
-  call('answerCallbackQuery', {callback_query_id: id, text});
+export const answerCallback = (id: string, text?: string) => call('answerCallbackQuery', {callback_query_id: id, text});
 
 export const clearButtons = (chatId: number, messageId: number) =>
   call('editMessageReplyMarkup', {chat_id: chatId, message_id: messageId, reply_markup: {inline_keyboard: []}});
@@ -97,7 +96,12 @@ export async function sendDocument(chatId: number, data: Buffer, filename: strin
  * which only works for people who have started a private chat with the bot.
  */
 export function notifyChatIds(): number[] {
-  const parse = (raw?: string) => (raw || '').split(',').map((x) => x.trim()).filter((x) => /^-?\d+$/.test(x)).map(Number);
+  const parse = (raw?: string) =>
+    (raw || '')
+      .split(',')
+      .map((x) => x.trim())
+      .filter((x) => /^-?\d+$/.test(x))
+      .map(Number);
   const explicit = parse(process.env.TELEGRAM_NOTIFY_CHAT_IDS);
   return [...new Set(explicit.length ? explicit : parse(process.env.TELEGRAM_ALLOWED_USERS))];
 }

@@ -5,8 +5,15 @@ const PROJECT = process.env.VERCEL_PROJECT_ID || 'prj_gZAEsuw7nw42Uq0zLLYayqic8H
 async function query<T>(path: string, params: Record<string, string | number>): Promise<T> {
   const token = process.env.VERCEL_API_TOKEN;
   if (!token) throw new Error('Site stats are not set up yet: VERCEL_API_TOKEN is missing.');
-  const qs = new URLSearchParams({projectId: PROJECT, teamId: TEAM, ...Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)]))});
-  const res = await fetch(`https://api.vercel.com/v1/query/web-analytics/${path}?${qs}`, {headers: {Authorization: `Bearer ${token}`}, cache: 'no-store'});
+  const qs = new URLSearchParams({
+    projectId: PROJECT,
+    teamId: TEAM,
+    ...Object.fromEntries(Object.entries(params).map(([k, v]) => [k, String(v)]))
+  });
+  const res = await fetch(`https://api.vercel.com/v1/query/web-analytics/${path}?${qs}`, {
+    headers: {Authorization: `Bearer ${token}`},
+    cache: 'no-store'
+  });
   if (!res.ok) throw new Error(`Vercel analytics ${path} -> ${res.status} ${(await res.text()).slice(0, 200)}`);
   return res.json() as Promise<T>;
 }

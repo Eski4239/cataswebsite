@@ -30,7 +30,10 @@ export const tastingSchema = z.object({
   title: localizedSchema,
   city: localizedSchema,
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), // YYYY-MM-DD
-  time: z.string().regex(/^\d{2}:\d{2}$/).optional(), // 24h HH:MM
+  time: z
+    .string()
+    .regex(/^\d{2}:\d{2}$/)
+    .optional(), // 24h HH:MM
   description: localizedSchema,
   longDescription: localizedSchema.optional(),
   price: z.number().nonnegative().optional(), // EUR per person
