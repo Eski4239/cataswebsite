@@ -8,6 +8,7 @@ import {
   answerCallback,
   clearButtons,
   downloadFile,
+  getBotInfo,
   isAllowed,
   sendMessage,
   sendTyping,
@@ -29,26 +30,43 @@ const HELP =
 
 async function handleMessage(msg: TgMessage) {
   const chatId = msg.chat.id;
-  const text = (msg.text ?? msg.caption ?? '').trim();
+  const inGroup = msg.chat.type === 'group' || msg.chat.type === 'supergroup';
+  const say = (t: string) => sendMessage(chatId, t, undefined, inGroup ? msg.message_id : undefined);
+  let text = (msg.text ?? msg.caption ?? '').trim();
+
+  // Commands may be addressed to a specific bot ("/id@some_bot"); ignore ones meant for another bot.
+  const cmd = text.match(/^\/(\w+)(?:@(\w+))?(?:\s|$)/);
+  const command = cmd?.[1].toLowerCase();
+  if (cmd?.[2] && cmd[2].toLowerCase() !== (await getBotInfo()).username.toLowerCase()) return;
 
   // Anyone can ask for their own numeric ID (needed to set up the allowlist); nothing else works for strangers.
-  if (text.startsWith('/id')) {
-    await sendMessage(chatId, `Your Telegram ID is ${msg.from?.id}`);
+  if (command === 'id') {
+    await say(`Your Telegram ID is ${msg.from?.id}` + (inGroup ? `\nThis group's chat ID is ${chatId}` : ''));
     return;
   }
   if (!isAllowed(msg.from)) return;
 
-  if (text === '/start' || text === '/help') {
-    await sendMessage(chatId, HELP);
+  // In a group the bot only reacts when addressed (a command, an @mention, or a reply to one of its messages),
+  // so ordinary conversation between the members never costs anything or gets misread as an instruction.
+  if (inGroup) {
+    const me = await getBotInfo();
+    const mention = new RegExp(`@${me.username}\\b`, 'gi');
+    const addressed = !!command || mention.test(text) || msg.reply_to_message?.from?.id === me.id;
+    if (!addressed) return;
+    text = text.replace(mention, '').trim();
+  }
+
+  if (command === 'start' || command === 'help') {
+    await say(HELP);
     return;
   }
   const imageDoc = msg.document?.mime_type?.startsWith('image/') ? msg.document : undefined;
   if (msg.video || msg.voice || (msg.document && !imageDoc)) {
-    await sendMessage(chatId, 'I can only handle text and photos for now. For videos, post the reel on Instagram and send me the link.');
+    await say('I can only handle text and photos for now. For videos, post the reel on Instagram and send me the link.');
     return;
   }
   if (!text && !msg.photo?.length && !imageDoc) {
-    await sendMessage(chatId, 'I can only read text and photos. Tell me what you would like to change on the website, or send /help.');
+    await say('I can only read text and photos. Tell me what you would like to change on the website, or send /help.');
     return;
   }
 
@@ -57,7 +75,8 @@ async function handleMessage(msg: TgMessage) {
   const photoId = msg.photo?.length ? msg.photo[msg.photo.length - 1].file_id : imageDoc?.file_id;
   if (photoId) ctx.photo = await downloadFile(photoId);
 
-  const userText = text.slice(0, 8000);
+  // In a group, tell the agent who is speaking (two people share the chat).
+  const userText = ((inGroup && msg.from?.first_name ? `${msg.from.first_name}: ` : '') + text).slice(0, 8000);
   const reply = await runAgent(userText, ctx, msg.reply_to_message?.text ?? msg.reply_to_message?.caption, getHistory(chatId));
   remember(chatId, (ctx.photo ? '[sent a photo] ' : '') + userText, reply);
 
@@ -65,7 +84,7 @@ async function handleMessage(msg: TgMessage) {
     ...ctx.confirmations.map((c) => ({text: c.label, callback_data: c.data})),
     ...(ctx.lastSha ? [{text: '↩️ Undo', callback_data: `undo:${ctx.lastSha.slice(0, 12)}`}] : [])
   ];
-  await sendMessage(chatId, reply, buttons);
+  await sendMessage(chatId, reply, buttons, inGroup ? msg.message_id : undefined);
 }
 
 async function handleCallback(cb: NonNullable<TgUpdate['callback_query']>) {

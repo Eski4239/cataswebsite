@@ -35,13 +35,14 @@ Luis and his brother update the site by chatting with a Telegram bot. Claude (So
 - Webhook: `src/app/api/telegram/route.ts`; agent loop `src/lib/agent/agent.ts`; tools `src/lib/agent/tools.ts`
 - Daily cron: `src/app/api/cron/daily/route.ts` (see `vercel.json`). Mondays: weekly digest with a nudge and stats. 1st of the month: backup (git tag `backup-YYYY-MM-DD` + zip sent to Telegram). Test with `GET /api/cron/daily?force=digest` (or `backup`) and header `Authorization: Bearer $CRON_SECRET`.
 - Scheduled reels have a future `publishedAt`; pages re-render every 15 minutes and show them once the time passes. Tastings drop off automatically after their date.
+- Group chats: in a group the bot only reacts to commands, @mentions of the bot, and replies to its own messages (ordinary chat is ignored). Only allowlisted members can instruct it, whoever else is in the group. `/id@<botname>` in the group shows the group's chat ID for `TELEGRAM_NOTIFY_CHAT_IDS`.
 - Access: only usernames/IDs in `TELEGRAM_ALLOWED_USERS`; the webhook rejects calls without `TELEGRAM_WEBHOOK_SECRET`.
 - Newsletter subscribers are stored in the Resend audience `RESEND_AUDIENCE_ID` by the signup form (`/api/newsletter`).
 - Setup: create the bot with @BotFather, set the env vars from `.env.example` in `.env.local` and in Vercel, deploy, then run `node --env-file=.env.local scripts/set-telegram-webhook.mjs https://<your-site>`
 
 ## Tests
 
-`npm run test:agent` runs 51 offline checks (no network, no real keys): the agent's tools against an in-memory fake GitHub, and the whole Telegram webhook -> agent -> Claude -> tools -> GitHub -> Telegram pipeline with scripted fakes, including failures (bad key, no credit, rate limits, commit races, strangers, duplicate deliveries). Fixtures live in `tests/fixtures/`.
+`npm run test:agent` runs 66 offline checks (no network, no real keys): the agent's tools against an in-memory fake GitHub, and the whole Telegram webhook -> agent -> Claude -> tools -> GitHub -> Telegram pipeline with scripted fakes, including failures (bad key, no credit, rate limits, commit races, strangers, duplicate deliveries). Fixtures live in `tests/fixtures/`.
 
 ## Folder Structure
 

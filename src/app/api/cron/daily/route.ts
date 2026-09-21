@@ -25,8 +25,16 @@ export async function GET(req: Request) {
   if (force === 'digest' || (!force && weekday === 1)) {
     try {
       const text = await buildDigest();
-      for (const id of chats) await sendMessage(id, text);
-      done.push('digest');
+      let delivered = 0;
+      for (const id of chats) {
+        try {
+          await sendMessage(id, text);
+          delivered++;
+        } catch (e) {
+          errors.push(`digest to ${id}: ${e instanceof Error ? e.message : e}`);
+        }
+      }
+      done.push(`digest (${delivered}/${chats.length} chats)`);
     } catch (e) {
       errors.push(`digest: ${e instanceof Error ? e.message : e}`);
     }

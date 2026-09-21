@@ -8,7 +8,10 @@ export async function createBackup(chatIds: number[]): Promise<string> {
   const name = existing.length ? `backup-${date}-${existing.length + 1}` : `backup-${date}`;
   const sha = await createTag(name);
   const zip = await downloadZip();
-  for (const id of chatIds) await sendDocument(id, zip, `${name}.zip`, `Website backup ${date} (restore point: git tag ${name}, commit ${sha.slice(0, 7)})`);
+  const caption = `Website backup ${date} (restore point: git tag ${name}, commit ${sha.slice(0, 7)})`;
+  const results = await Promise.allSettled(chatIds.map((id) => sendDocument(id, zip, `${name}.zip`, caption)));
+  // One unreachable chat must not stop the others; only fail if nobody received it.
+  if (chatIds.length && results.every((r) => r.status === 'rejected')) throw new Error('Telegram: the backup could not be delivered to any chat');
   return name;
 }
 
