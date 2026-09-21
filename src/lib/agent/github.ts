@@ -1,4 +1,6 @@
 // GitHub helpers — the agent stores content by committing to the repo; Vercel redeploys on push.
+import {withChatTrailer} from './context';
+
 const API = 'https://api.github.com';
 
 function cfg() {
@@ -79,7 +81,7 @@ async function commitOnce(message: string, files: FileChange[]): Promise<string>
   });
   const commit = await gh<{sha: string}>('/git/commits', {
     method: 'POST',
-    body: JSON.stringify({message, tree: newTree.sha, parents: [ref.object.sha]})
+    body: JSON.stringify({message: withChatTrailer(message), tree: newTree.sha, parents: [ref.object.sha]})
   });
   await gh(`/git/refs/heads/${branch}`, {method: 'PATCH', body: JSON.stringify({sha: commit.sha})});
   return commit.sha;
@@ -104,7 +106,7 @@ export async function undoHead(expectSha?: string): Promise<{ok: true; sha: stri
   const commit = await gh<{sha: string}>('/git/commits', {
     method: 'POST',
     body: JSON.stringify({
-      message: `agent: undo "${head.message.split('\n')[0].slice(0, 60)}"`,
+      message: withChatTrailer(`agent: undo \"${head.message.split('\n')[0].slice(0, 60)}\"`),
       tree: parent.tree.sha,
       parents: [ref.object.sha]
     })
@@ -135,4 +137,10 @@ export async function downloadZip(): Promise<Buffer> {
   });
   if (!res.ok) throw new Error(`GitHub zipball -> ${res.status}`);
   return Buffer.from(await res.arrayBuffer());
+}
+
+/** Full commit message for a sha (used to find which chat a deployment belongs to). */
+export async function getCommitMessage(sha: string): Promise<string> {
+  const commit = await gh<{message: string}>(`/git/commits/${sha}`);
+  return commit.message;
 }

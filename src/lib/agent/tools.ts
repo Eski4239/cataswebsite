@@ -6,7 +6,7 @@ import {createBackup, listBackups} from './backup';
 import {commitFiles, readJson, undoHead, type FileChange} from './github';
 import {createDraft, discardDraft, sendDraft} from './newsletter';
 import {getSiteStats} from './stats';
-import {madridLocalToIso} from './time';
+import {madridLocalToIso, todayInMadrid} from './time';
 import {
   REEL_CATEGORIES,
   aboutSchema,
@@ -276,7 +276,11 @@ const aboutUpdateSchema = z.object({
 });
 const newsletterSchema = z.object({subject: localizedSchema, body: localizedSchema});
 
-const LIVE_SOON = 'Live in about a minute, once the site redeploys.';
+/** What to tell the user about timing: a follow-up message is promised only when the GitHub webhook is configured. */
+const liveNote = () =>
+  process.env.GITHUB_WEBHOOK_SECRET
+    ? 'Saved. A follow-up message will confirm when it is live (about a minute).'
+    : 'Live in about a minute, once the site redeploys.';
 
 // ---------- dispatcher ----------
 
@@ -330,7 +334,7 @@ export async function runTool(name: string, input: unknown, ctx: ToolContext): P
         id: reel.id,
         scheduled,
         publishedAt,
-        note: scheduled ? 'It will appear automatically at that time (within about 15 minutes of it).' : LIVE_SOON
+        note: scheduled ? 'It will appear automatically at that time (within about 15 minutes of it).' : liveNote()
       };
     }
     case 'update_reel': {
@@ -341,7 +345,7 @@ export async function runTool(name: string, input: unknown, ctx: ToolContext): P
       if (changes.instagramUrl) changes.instagramUrl = normalizeInstagramUrl(changes.instagramUrl);
       reels[i] = reelSchema.parse({...reels[i], ...optional(changes), ...(publishAt ? {publishedAt: publishIso(publishAt)} : {})});
       ctx.lastSha = await commitFiles(`agent: update reel "${reels[i].title.en}"`, [{path: REELS, content: asJson(reels)}]);
-      return {ok: true, note: LIVE_SOON};
+      return {ok: true, note: liveNote()};
     }
     case 'delete_reel': {
       const {id} = idSchema.parse(input);
@@ -365,7 +369,7 @@ export async function runTool(name: string, input: unknown, ctx: ToolContext): P
         {path: TASTINGS, content: asJson([...tastings, tasting])},
         ...(photo ? [photo.file] : [])
       ]);
-      return {ok: true, id, note: `${LIVE_SOON} Tastings disappear from the site automatically after their date.`};
+      return {ok: true, id, note: `${liveNote()} Tastings disappear from the site automatically after their date.`};
     }
     case 'update_tasting': {
       const {id, usePhoto: withPhoto, ...changes} = updateTastingSchema.parse(input);
@@ -379,7 +383,7 @@ export async function runTool(name: string, input: unknown, ctx: ToolContext): P
         {path: TASTINGS, content: asJson(tastings)},
         ...files
       ]);
-      return {ok: true, note: LIVE_SOON};
+      return {ok: true, note: liveNote()};
     }
     case 'delete_tasting': {
       const {id} = idSchema.parse(input);
@@ -397,12 +401,12 @@ export async function runTool(name: string, input: unknown, ctx: ToolContext): P
       const {usePhoto: withPhoto, ...changes} = bottleUpdateSchema.parse(input);
       const current = (await readJson<Partial<BottleRecord>>(BOTTLE)) ?? {};
       const photo = withPhoto ? await savePhoto(ctx, 'bottle', 'bottle') : undefined;
-      const next = bottleSchema.parse({...current, ...optional(changes), ...(photo ? {image: photo.url} : {})});
+      const next = bottleSchema.parse({...current, ...optional(changes), ...(photo ? {image: photo.url} : {}), updatedAt: todayInMadrid()});
       ctx.lastSha = await commitFiles(`agent: set bottle of the week "${next.wineName}"`, [
         {path: BOTTLE, content: asJson(next)},
         ...(photo ? [photo.file, ...dropOld(current.image)] : [])
       ]);
-      return {ok: true, note: LIVE_SOON};
+      return {ok: true, note: liveNote()};
     }
 
     // --- about
@@ -412,7 +416,7 @@ export async function runTool(name: string, input: unknown, ctx: ToolContext): P
       const about = aboutSchema.parse(await readJson(ABOUT));
       const next = aboutSchema.parse({...about, ...optional(c)});
       ctx.lastSha = await commitFiles('agent: update about page', [{path: ABOUT, content: asJson(next)}]);
-      return {ok: true, note: LIVE_SOON};
+      return {ok: true, note: liveNote()};
     }
     case 'set_about_portrait': {
       const about = aboutSchema.parse(await readJson(ABOUT));
@@ -422,7 +426,7 @@ export async function runTool(name: string, input: unknown, ctx: ToolContext): P
         {path: ABOUT, content: asJson({...about, portrait: photo.url})},
         ...dropOld(about.portrait)
       ]);
-      return {ok: true, note: LIVE_SOON};
+      return {ok: true, note: liveNote()};
     }
 
     // --- newsletter, stats, backups

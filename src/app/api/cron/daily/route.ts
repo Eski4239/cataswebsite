@@ -48,5 +48,11 @@ export async function GET(req: Request) {
     }
   }
 
+  // Tell the owners when a scheduled job fails, so it does not fail silently.
+  if (errors.length) {
+    const alert = `⚠️ A scheduled website job had a problem:\n${errors.join('\n')}`;
+    await Promise.allSettled(chats.map((id) => sendMessage(id, alert)));
+  }
+
   return Response.json({ok: errors.length === 0, done, errors});
 }

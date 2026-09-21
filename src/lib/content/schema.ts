@@ -47,6 +47,7 @@ export const bottleSchema = z.object({
   region: localizedSchema,
   tastingNotes: localizedSchema,
   story: localizedSchema,
-  image: z.string().optional()
+  image: z.string().optional(),
+  updatedAt: z.string().optional() // YYYY-MM-DD, set by the agent; drives the "bottle is stale" nudge
 });
 export type BottleRecord = z.infer<typeof bottleSchema>;
