@@ -30,4 +30,5 @@ coverage/
 
 
 # claude
-.claude/tsconfig.tsbuildinfo
+.claude/
+tsconfig.tsbuildinfo

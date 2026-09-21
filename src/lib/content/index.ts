@@ -1,27 +1,9 @@
 // Content loader — reads the JSON files in /content (edited by the Telegram agent or by hand).
 // Replaces the old Sanity queries; function names and return shapes are kept the same.
 import {z} from 'zod';
+import {aboutSchema, reelSchema} from './schema';
 import reelsData from '../../../content/reels.json';
 import aboutData from '../../../content/about.json';
-
-const localized = z.object({en: z.string(), es: z.string()});
-
-const reelSchema = z.object({
-  id: z.string(),
-  title: localized,
-  description: localized,
-  instagramUrl: z.string().url(),
-  category: z.enum(['History', 'Regions', 'Grapes', 'Tastings', 'Beginner Guides']),
-  featured: z.boolean().default(false),
-  publishedAt: z.string()
-});
-
-const aboutSchema = z.object({
-  portrait: z.string().optional(),
-  philosophy: localized,
-  timeline: z.array(localized).default([]),
-  quote: localized
-});
 
 const reels = z.array(reelSchema).parse(reelsData);
 const about = aboutSchema.parse(aboutData);
