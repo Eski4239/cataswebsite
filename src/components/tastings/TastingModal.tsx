@@ -15,7 +15,9 @@ export function TastingModal({tasting, onClose}: {tasting: Tasting; onClose: () 
   useEffect(() => {
     requestAnimationFrame(() => setVisible(true));
     document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, []);
 
   const total = (tasting.price ?? 0) * quantity;
@@ -42,16 +44,10 @@ export function TastingModal({tasting, onClose}: {tasting: Tasting; onClose: () 
           ✕
         </button>
 
-        <img
-          src={tasting.image}
-          alt={tasting.title}
-          className="h-56 w-full object-cover sm:h-64"
-        />
+        <img src={tasting.image} alt={tasting.title} className="h-56 w-full object-cover sm:h-64" />
 
         <div className="p-6 sm:p-8">
-          <h2 className="font-heading text-3xl text-charcoal sm:text-4xl">
-            {tasting.title}
-          </h2>
+          <h2 className="font-heading text-3xl text-charcoal sm:text-4xl">{tasting.title}</h2>
 
           <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted">
             <span>{tasting.dateLabel}</span>
@@ -59,37 +55,37 @@ export function TastingModal({tasting, onClose}: {tasting: Tasting; onClose: () 
             <span>{tasting.city}</span>
           </div>
 
-          <p className="mt-6 text-sm leading-relaxed text-muted">
-            {tasting.longDescription}
-          </p>
+          <p className="mt-6 text-sm leading-relaxed text-muted">{tasting.longDescription}</p>
 
           <div className="mt-8 border-t border-border pt-6">
             {tasting.price !== undefined && (
               <>
-              <p className="text-sm text-muted">€{tasting.price} {tt('perPerson')}</p>
+                <p className="text-sm text-muted">
+                  €{tasting.price} {tt('perPerson')}
+                </p>
 
-              <div className="mt-4 flex items-center gap-4">
-                <span className="text-xs uppercase tracking-[0.16em] text-charcoal">{t('guests')}</span>
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-charcoal transition-colors hover:border-burgundy"
-                  >
-                    −
-                  </button>
-                  <span className="w-6 text-center font-heading text-xl text-charcoal">{quantity}</span>
-                  <button
-                    onClick={() => setQuantity(Math.min(4, quantity + 1))}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-charcoal transition-colors hover:border-burgundy"
-                  >
-                    +
-                  </button>
+                <div className="mt-4 flex items-center gap-4">
+                  <span className="text-xs uppercase tracking-[0.16em] text-charcoal">{t('guests')}</span>
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-charcoal transition-colors hover:border-burgundy"
+                    >
+                      −
+                    </button>
+                    <span className="w-6 text-center font-heading text-xl text-charcoal">{quantity}</span>
+                    <button
+                      onClick={() => setQuantity(Math.min(4, quantity + 1))}
+                      className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-charcoal transition-colors hover:border-burgundy"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
-              </div>
 
-              <p className="mt-4 font-heading text-2xl text-charcoal">
-                {t('total')}: €{total}
-              </p>
+                <p className="mt-4 font-heading text-2xl text-charcoal">
+                  {t('total')}: €{total}
+                </p>
               </>
             )}
 

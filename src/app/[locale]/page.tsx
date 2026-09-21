@@ -37,14 +37,10 @@ export default async function Home({params}: Props) {
         </div>
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
           <FadeUp>
-            <h1 className="font-heading text-5xl font-light leading-[1.1] text-charcoal md:text-7xl lg:text-8xl">
-              {hero('heading')}
-            </h1>
+            <h1 className="font-heading text-5xl font-light leading-[1.1] text-charcoal md:text-7xl lg:text-8xl">{hero('heading')}</h1>
           </FadeUp>
           <FadeUp delay={0.15}>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-muted md:text-xl">
-              {hero('subheading')}
-            </p>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-muted md:text-xl">{hero('subheading')}</p>
           </FadeUp>
           <FadeUp delay={0.3}>
             <Link
@@ -61,14 +57,10 @@ export default async function Home({params}: Props) {
       <section className="section-shell">
         <div className="mx-auto max-w-3xl text-center">
           <FadeUp>
-            <h2 className="font-heading text-4xl font-light text-charcoal md:text-5xl">
-              {philosophy('heading')}
-            </h2>
+            <h2 className="font-heading text-4xl font-light text-charcoal md:text-5xl">{philosophy('heading')}</h2>
           </FadeUp>
           <FadeUp delay={0.1}>
-            <p className="mt-8 text-lg leading-relaxed text-muted">
-              {philosophy('body')}
-            </p>
+            <p className="mt-8 text-lg leading-relaxed text-muted">{philosophy('body')}</p>
           </FadeUp>
         </div>
       </section>
@@ -78,26 +70,21 @@ export default async function Home({params}: Props) {
         <FadeUp>
           <div className="mx-auto max-w-3xl">
             <div className="mb-6 h-px w-16 bg-burgundy" />
-            <h2 className="font-heading text-4xl font-light text-charcoal md:text-5xl">
-              {bottle('heading')}
-            </h2>
+            <h2 className="font-heading text-4xl font-light text-charcoal md:text-5xl">{bottle('heading')}</h2>
             <article className="mt-10 rounded-2xl border border-border bg-surface p-8 md:p-12">
               {bottleContent.image && (
                 <img src={bottleContent.image} alt={bottleContent.wineName} className="mb-8 h-64 w-full rounded-xl object-cover" />
               )}
               <p className="meta-label text-burgundy">{bottleContent.region}</p>
-              <h3 className="mt-3 font-heading text-3xl text-charcoal md:text-4xl">
-                {bottleContent.wineName}
-              </h3>
+              <h3 className="mt-3 font-heading text-3xl text-charcoal md:text-4xl">{bottleContent.wineName}</h3>
               <p className="mt-2 text-sm text-muted">{bottleContent.winery}</p>
               <div className="mt-6 space-y-4 text-muted">
                 <p>
-                  <span className="meta-label mr-2 text-charcoal">{bottle('tastingNotesLabel')}</span><br />
+                  <span className="meta-label mr-2 text-charcoal">{bottle('tastingNotesLabel')}</span>
+                  <br />
                   {bottleContent.tastingNotes}
                 </p>
-                <p className="border-l-2 border-gold pl-4 italic">
-                  {bottleContent.story}
-                </p>
+                <p className="border-l-2 border-gold pl-4 italic">{bottleContent.story}</p>
               </div>
             </article>
           </div>
@@ -108,9 +95,7 @@ export default async function Home({params}: Props) {
       <section className="section-shell">
         <FadeUp>
           <div className="mx-auto max-w-4xl">
-            <h2 className="text-center font-heading text-4xl font-light text-charcoal md:text-5xl">
-              {tastingsHome('heading')}
-            </h2>
+            <h2 className="text-center font-heading text-4xl font-light text-charcoal md:text-5xl">{tastingsHome('heading')}</h2>
             {upcoming.length === 0 ? (
               <p className="mt-12 text-center font-heading text-2xl italic text-muted">{tastingsHome('empty')}</p>
             ) : (

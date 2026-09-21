@@ -1,13 +1,11 @@
 // next-intl request config — loads locale-specific message files at request time
 import {getRequestConfig} from 'next-intl/server';
 
-import {defaultLocale, locales} from '@/lib/i18n/routing';
+import {defaultLocale, isLocale} from '@/lib/i18n/routing';
 
 export default getRequestConfig(async ({requestLocale}) => {
-  const locale =
-    locales.includes((await requestLocale) as any)
-      ? await requestLocale
-      : defaultLocale;
+  const requested = await requestLocale;
+  const locale = isLocale(requested) ? requested : defaultLocale;
 
   return {
     locale,

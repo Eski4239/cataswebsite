@@ -22,28 +22,19 @@ export default async function AboutPage({params}: {params: Promise<{locale: stri
 
       {content.portrait && (
         <div className="mt-10 overflow-hidden rounded-2xl border border-border">
-          <Image
-            src={content.portrait}
-            alt="Luis Torres"
-            width={900}
-            height={600}
-            className="h-auto w-full object-cover"
-            priority
-          />
+          <Image src={content.portrait} alt="Luis Torres" width={900} height={600} className="h-auto w-full object-cover" priority />
         </div>
       )}
 
-      {content.philosophy && (
-        <p className="mt-12 max-w-3xl text-lg leading-relaxed text-muted">
-          {content.philosophy}
-        </p>
-      )}
+      {content.philosophy && <p className="mt-12 max-w-3xl text-lg leading-relaxed text-muted">{content.philosophy}</p>}
 
       {content.timeline && content.timeline.length > 0 && (
         <div className="mt-16 max-w-2xl">
           <div className="space-y-6 border-l-2 border-burgundy/30 pl-6">
             {content.timeline.map((item: string, i: number) => (
-              <p key={i} className="text-muted">{item}</p>
+              <p key={i} className="text-muted">
+                {item}
+              </p>
             ))}
           </div>
         </div>
@@ -51,9 +42,7 @@ export default async function AboutPage({params}: {params: Promise<{locale: stri
 
       {content.quote && (
         <blockquote className="mt-16 max-w-2xl border-l-4 border-gold pl-6">
-          <p className="font-heading text-3xl italic leading-snug text-charcoal md:text-4xl">
-            &ldquo;{content.quote}&rdquo;
-          </p>
+          <p className="font-heading text-3xl italic leading-snug text-charcoal md:text-4xl">&ldquo;{content.quote}&rdquo;</p>
         </blockquote>
       )}
     </section>
