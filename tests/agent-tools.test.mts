@@ -188,6 +188,7 @@ ok(/Bottle of the Week/.test(before) && /not been updated/.test(before), 'digest
 c = ctx();
 c.photo = jpg;
 await runTool('set_bottle', {wineName: 'Pesquera 2018', story: L('story', 'historia'), usePhoto: true}, c);
+ok(J('content/bottle.json').updatedAt === todayInMadrid(), 'set_bottle records the update date');
 ok(
   J('content/bottle.json').wineName === 'Pesquera 2018' &&
     J('content/bottle.json').winery === 'López de Heredia' &&
@@ -235,4 +236,5 @@ console.log(
 );
 const d = await buildDigest();
 ok(/Weekly website check-in/.test(d) && /Buenos días/.test(d), 'digest builds (EN + ES)');
+ok(!/Bottle of the Week/.test(d), 'no bottle nudge once it was updated today');
 console.log('\n' + d);
