@@ -80,6 +80,11 @@ c = ctx(); c.photo = jpg; await runTool('set_about_portrait', {}, c);
 ok(!files.has('public/uploads/about/portrait.jpg') && J('content/about.json').portrait.startsWith('/uploads/about/portrait-'), 'portrait replaced, old file removed');
 await runTool('update_about', {}, ctx()).then(() => ok(false, 'empty about blocked'), () => ok(true, 'empty update_about rejected'));
 
+// newsletter is only offered when Resend is configured
+const {tools: offered, newsletterEnabled} = await import(R + 'src/lib/agent/tools.ts');
+ok(!newsletterEnabled() && !offered.some((t: any) => t.name === 'draft_newsletter'), 'newsletter tool is not offered while Resend is not configured');
+ok(offered.some((t: any) => t.name === 'add_reel'), 'other tools are still offered');
+
 // undo + safety
 headMsg = 'human commit';
 r = await runConfirmed('undo:h1').then((x: string) => x); ok(/not made by me|Something else/.test(r), 'undo refuses non-agent / stale head: ' + r);

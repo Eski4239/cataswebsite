@@ -35,8 +35,8 @@ export async function buildDigest(): Promise<string> {
     const t = upcoming[0];
     const inDays = Math.ceil((Date.parse(t.date) - now) / DAY);
     if (inDays <= 14) {
-      en.push(`• "${t.title.en}" is in ${inDays} day(s). Time to promote it: a reel or a newsletter?`);
-      es.push(`• "${t.title.es}" es en ${inDays} día(s). Momento de promocionarla: ¿un reel o una newsletter?`);
+      en.push(`• "${t.title.en}" is in ${inDays} day(s). Time to promote it with a reel?`);
+      es.push(`• "${t.title.es}" es en ${inDays} día(s). Momento de promocionarla con un reel.`);
     }
   }
 

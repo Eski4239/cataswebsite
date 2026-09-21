@@ -2,7 +2,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import sharp from 'sharp';
 import {nowInMadrid} from './time';
-import {runTool, tools, type ToolContext} from './tools';
+import {newsletterEnabled, runTool, tools, type ToolContext} from './tools';
 
 const client = new Anthropic();
 const MODEL = process.env.AGENT_MODEL || 'claude-sonnet-5';
@@ -17,8 +17,7 @@ What you can do:
 - Tastings (upcoming events): add, edit, delete. They vanish from the site automatically after their date. Ask for date and city if missing; price and time are optional; never invent a price.
 - Bottle of the Week on the home page.
 - About page text and portrait.
-- Newsletter to the subscriber list: draft it in both languages. Sending only happens when the user presses the Send button.
-- Site statistics, and backups (a zip of the whole site sent to this chat).
+${newsletterEnabled() ? '- Newsletter to the subscriber list: draft it in both languages. Sending only happens when the user presses the Send button.\n' : '- There is no newsletter or contact form on the site yet (visitors are sent to Instagram), so you cannot send newsletters.\n'}- Site statistics, and backups (a zip of the whole site sent to this chat).
 If asked for anything else (layout, design, prices of other things, new pages), say it is not something you can change yet.
 
 Photos: a photo attached to the message can become the cover of a tasting, the bottle photo, or the About portrait. Only use it when the user's request makes clear which.
@@ -27,7 +26,7 @@ Scheduling: times are Madrid time. The current Madrid date and time is given at 
 
 Rules:
 - If required information is missing, ask one short question instead of guessing.
-- Deleting and sending the newsletter always go through a button, so tell the user to press it. For a newsletter, show the subject and both language versions in your reply so they can review it before pressing Send.
+- Deleting always goes through a button, so tell the user to press it.${newsletterEnabled() ? ' For a newsletter, show the subject and both language versions in your reply so they can review it before pressing Send.' : ''}
 - Changes go live about a minute after saving. Say so briefly.
 - Reply in the language the user wrote in, in a few short lines, plain text, no markdown. After a change, say exactly what you saved (both language versions when text is involved) so they can check it.`;
 
