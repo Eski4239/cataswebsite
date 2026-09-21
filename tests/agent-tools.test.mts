@@ -54,7 +54,7 @@ globalThis.fetch = (async (url: string, init?: RequestInit) => {
 }) as typeof fetch;
 
 const {runTool, runConfirmed} = await import(R + 'src/lib/agent/tools.ts');
-const {madridLocalToIso} = await import(R + 'src/lib/agent/time.ts');
+const {madridLocalToIso, todayInMadrid} = await import(R + 'src/lib/agent/time.ts');
 const {isAllowed, notifyChatIds} = await import(R + 'src/lib/agent/telegram.ts');
 const {buildDigest} = await import(R + 'src/lib/agent/digest.ts');
 const ok = (c: boolean, msg: string) => {
@@ -179,6 +179,10 @@ c = ctx();
 await runTool('delete_tasting', {id: t.id}, c);
 await runConfirmed(c.confirmations[0].data);
 ok(J('content/tastings.json').length === tn0, 'tasting deleted after confirmation');
+
+// bottle of the week: stale nudge, then fresh after an update
+const before = await buildDigest();
+ok(/Bottle of the Week/.test(before) && /not been updated/.test(before), 'digest nudges when the Bottle of the Week was never updated');
 
 // bottle + about portrait replaces old file
 c = ctx();

@@ -27,8 +27,14 @@ Scheduling: times are Madrid time. The current Madrid date and time is given at 
 Rules:
 - If required information is missing, ask one short question instead of guessing.
 - Deleting always goes through a button, so tell the user to press it.${newsletterEnabled() ? ' For a newsletter, show the subject and both language versions in your reply so they can review it before pressing Send.' : ''}
-- Changes go live about a minute after saving. Say so briefly.
+- Changes go live about a minute after saving. Say so briefly, and if a tool note says a follow-up message will confirm it, say that.
 - Reply in the language the user wrote in, in a few short lines, plain text, no markdown. After a change, say exactly what you saved (both language versions when text is involved) so they can check it.`;
+
+/** Rough cost in USD for the default model (Sonnet 5: $2 per million input tokens, $10 per million output; cache reads 10%, writes 125%). */
+function estimateCost(u: {input: number; output: number; cacheRead: number; cacheWrite: number}) {
+  const usd = (u.input * 2 + u.output * 10 + u.cacheRead * 0.2 + u.cacheWrite * 2.5) / 1_000_000;
+  return Math.round(usd * 10000) / 10000;
+}
 
 export async function runAgent(
   text: string,
@@ -57,10 +63,14 @@ export async function runAgent(
     {role: 'user', content}
   ];
 
+  const usage = {input: 0, output: 0, cacheRead: 0, cacheWrite: 0, calls: 0};
+  const logUsage = () => console.log(JSON.stringify({event: 'agent_usage', model: MODEL, ...usage, approxUsd: estimateCost(usage)}));
+
   for (let step = 0; step < MAX_STEPS; step++) {
     const res = await client.messages.create({
       model: MODEL,
       max_tokens: 4096,
+      cache_control: {type: 'ephemeral'}, // the tools and system prompt are identical every call, so re-reads are cheap
       system: SYSTEM,
       tools,
       messages,
@@ -68,10 +78,20 @@ export async function runAgent(
       output_config: {effort: 'medium'}
     });
 
-    if (res.stop_reason === 'refusal') return 'I cannot help with that request.';
+    usage.calls++;
+    usage.input += res.usage.input_tokens;
+    usage.output += res.usage.output_tokens;
+    usage.cacheRead += res.usage.cache_read_input_tokens ?? 0;
+    usage.cacheWrite += res.usage.cache_creation_input_tokens ?? 0;
+
+    if (res.stop_reason === 'refusal') {
+      logUsage();
+      return 'I cannot help with that request.';
+    }
     messages.push({role: 'assistant', content: res.content});
 
     if (res.stop_reason !== 'tool_use') {
+      logUsage();
       return (
         res.content
           .filter((b): b is Anthropic.TextBlock => b.type === 'text')
@@ -93,5 +113,6 @@ export async function runAgent(
     }
     messages.push({role: 'user', content: results});
   }
+  logUsage();
   return 'That took too many steps. Please try again with a simpler request.';
 }

@@ -46,3 +46,6 @@ export function madridLocalToIso(local: string): string {
   const guess = asUtc - offsetAt(asUtc);
   return new Date(asUtc - offsetAt(guess)).toISOString();
 }
+
+/** Today's date in Madrid as YYYY-MM-DD. */
+export const todayInMadrid = () => new Intl.DateTimeFormat('en-CA', {timeZone: TZ}).format(new Date());

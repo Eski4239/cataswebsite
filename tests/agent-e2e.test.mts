@@ -7,7 +7,8 @@ Object.assign(process.env, {
   TELEGRAM_BOT_TOKEN: 'tok',
   TELEGRAM_ALLOWED_USERS: 'jajasaluu2,pabsgv',
   ANTHROPIC_API_KEY: 'k',
-  GITHUB_TOKEN: 'gh'
+  GITHUB_TOKEN: 'gh',
+  GITHUB_WEBHOOK_SECRET: 'ghsecret'
 });
 const R = new URL('../', import.meta.url).pathname; // repo root, so the tests work from any checkout
 const FIX = R + 'tests/fixtures/';
@@ -18,6 +19,7 @@ const jpg = await sharp({create: {width: 2400, height: 1600, channels: 3, backgr
 // ---------- fake world ----------
 const files = new Map<string, Buffer>();
 for (const f of ['reels', 'tastings', 'bottle', 'about']) files.set(`content/${f}.json`, fs.readFileSync(`${FIX}${f}.json`));
+const depMessages: Record<string, string> = {};
 const blobs = new Map<string, Buffer>();
 let head = 0;
 let headMsg = 'human';
@@ -58,6 +60,8 @@ globalThis.fetch = (async (url: string, init?: RequestInit) => {
   const body = raw ? JSON.parse(String(raw)) : {};
   if (u.includes('/contents/')) return J({content: files.get(u.split('/contents/')[1].split('?')[0])!.toString('base64')});
   if (u.includes('/git/ref/heads')) return J({object: {sha: `h${head}`}});
+  const dep = u.match(/\/git\/commits\/(dep-\w+)$/);
+  if (dep) return J({message: depMessages[dep[1]]});
   if (/\/git\/commits\/h\d+$/.test(u)) return J({tree: {sha: 't'}, message: headMsg, parents: [{sha: 'p'}]});
   if (u.endsWith('/git/blobs')) {
     const id = `b${blobs.size}`;
@@ -436,12 +440,99 @@ ok(
   'cron: one unreachable chat is reported but does not stop the others',
   JSON.stringify(cr)
 );
+ok(
+  sent().some((m) => m.chat_id === -100777 && /⚠️/.test(m.text)),
+  'cron: a failing job raises an alert in the chat'
+);
 reset();
 process.env.TELEGRAM_NOTIFY_CHAT_IDS = '';
 process.env.TELEGRAM_ALLOWED_USERS = 'jajasaluu2,pabsgv,-100888,555';
 const {notifyChatIds} = await import(R + 'src/lib/agent/telegram.ts');
 ok(JSON.stringify(notifyChatIds()) === '[-100888,555]', 'notify falls back to numeric allowlist entries when no explicit chat is set');
 process.env.TELEGRAM_ALLOWED_USERS = 'jajasaluu2,pabsgv';
+
+// ---------- 11. commits are tagged with their chat, /digest, HEIC ----------
+reset();
+claudeScript = [
+  () =>
+    toolUse('add_reel', {
+      instagramUrl: 'https://www.instagram.com/reel/TRAILER1/',
+      title: {en: 'Trailer', es: 'Trailer'},
+      description: {en: 'd', es: 'd'},
+      category: 'Grapes'
+    }),
+  () => say('Added.')
+];
+await send(msgText('add trailer reel'));
+await wait(500);
+ok(commitLog.at(-1)?.endsWith('\n\nchat: 5'), 'commits made through the bot carry a "chat: <id>" trailer', String(commitLog.at(-1)));
+reset();
+await send(msgText('/digest'));
+await wait(500);
+ok(claudeCalls === 0 && /Weekly website check-in/.test(sent().at(-1)?.text ?? ''), '/digest sends the weekly check-in on demand');
+reset();
+await send(gmsg({text: '/digest@luis_test_bot'}));
+await wait(500);
+ok(
+  sent().some((m) => m.chat_id === -100777 && /Weekly website check-in/.test(m.text)),
+  '/digest also works in the group'
+);
+reset();
+await send(msg({document: {file_id: 'h', mime_type: 'image/heic'}}));
+await wait(300);
+ok(claudeCalls === 0 && /HEIC/.test(sent()[0]?.text ?? ''), 'HEIC file: clear guidance instead of a failure');
+
+// ---------- 12. GitHub deployment webhook ----------
+const {POST: ghPOST} = await import(R + 'src/app/api/github-webhook/route.ts');
+const {createHmac} = await import('node:crypto');
+const sign = (body: string, secret = 'ghsecret') => 'sha256=' + createHmac('sha256', secret).update(body).digest('hex');
+const gh = (payload: any, opts: {event?: string; secret?: string; rawBody?: string} = {}) => {
+  const body = opts.rawBody ?? JSON.stringify(payload);
+  return ghPOST(
+    new Request('https://x/api/github-webhook', {
+      method: 'POST',
+      headers: {'x-hub-signature-256': sign(body, opts.secret), 'x-github-event': opts.event ?? 'deployment_status'},
+      body
+    })
+  );
+};
+const dep = (sha: string, state: string, env = 'Production') => ({deployment_status: {state}, deployment: {sha, environment: env}});
+depMessages['dep-ok'] = 'agent: add reel "Sherry Secrets"\n\nchat: -100777';
+depMessages['dep-bad'] = 'agent: update about page\n\nchat: 5';
+depMessages['dep-human'] = 'Fix a typo';
+depMessages['dep-notrailer'] = 'agent: add reel "Old"';
+reset();
+ok((await gh(dep('dep-ok', 'success'), {secret: 'wrong'})).status === 403, 'github webhook: wrong signature -> 403');
+ok((await ghPOST(new Request('https://x', {method: 'POST', body: '{}'}))).status === 403, 'github webhook: missing signature -> 403');
+await gh(dep('dep-ok', 'success'), {event: 'push'});
+await wait(300);
+ok(tg.length === 0, 'github webhook: other event types are ignored');
+ok((await gh(null, {rawBody: 'not json{{'})).status === 200 && tg.length === 0, 'github webhook: malformed body is harmless');
+reset();
+await gh(dep('dep-ok', 'success'));
+await wait(400);
+ok(
+  sent().some((m) => m.chat_id === -100777 && /✅/.test(m.text) && /Sherry Secrets/.test(m.text)),
+  'deployment success -> "live" message goes to the chat that made the change'
+);
+reset();
+await gh(dep('dep-bad', 'failure'));
+await wait(400);
+ok(
+  sent().some((m) => m.chat_id === 5 && /❌/.test(m.text) && /undo/.test(m.text)),
+  'deployment failure -> clear warning with the undo hint'
+);
+reset();
+await gh(dep('dep-ok', 'success', 'Preview'));
+await gh(dep('dep-ok', 'pending'));
+await gh(dep('dep-ok', 'in_progress'));
+await wait(300);
+ok(tg.length === 0, 'preview deployments and unfinished states send nothing');
+reset();
+await gh(dep('dep-human', 'success'));
+await gh(dep('dep-notrailer', 'success'));
+await wait(300);
+ok(tg.length === 0, 'commits not made by the bot (or without a chat) send nothing');
 
 console.log(
   `\ncommits made: ${commitLog.length}; content still valid JSON: ${['reels', 'tastings', 'bottle', 'about'].every((f) => {

@@ -1,6 +1,8 @@
 // Telegram webhook — receives messages from Luis and his brother and lets the agent update the site.
 import {waitUntil} from '@vercel/functions';
 import {runAgent} from '@/lib/agent/agent';
+import {requestContext} from '@/lib/agent/context';
+import {buildDigest} from '@/lib/agent/digest';
 import {friendlyError} from '@/lib/agent/errors';
 import {alreadyHandled, getHistory, remember} from '@/lib/agent/history';
 import {runConfirmed, type ToolContext} from '@/lib/agent/tools';
@@ -25,7 +27,8 @@ const HELP =
   '• Tastings: tell me the date, city and details (and send a photo for the cover).\n' +
   '• Bottle of the week: tell me the wine and its story (a photo is optional).\n' +
   '• About page text and portrait photo.\n' +
-  '• "stats" for visitor numbers, "backup" for a full copy, "show content" to see what is live, "undo" to reverse my last change.';
+  '• "stats" for visitor numbers, "backup" for a full copy, "show content" to see what is live, "undo" to reverse my last change.\n' +
+  '• /digest for the weekly check-in on demand.';
 
 async function handleMessage(msg: TgMessage) {
   const chatId = msg.chat.id;
@@ -57,6 +60,17 @@ async function handleMessage(msg: TgMessage) {
 
   if (command === 'start' || command === 'help') {
     await say(HELP);
+    return;
+  }
+  if (command === 'digest') {
+    await sendTyping(chatId);
+    await say(await buildDigest());
+    return;
+  }
+  if (/hei[cf]/i.test(msg.document?.mime_type ?? '')) {
+    await say(
+      'I cannot read HEIC photos when they are sent as files. Please send the picture as a normal photo (not as a file), or as a JPEG.'
+    );
     return;
   }
   const imageDoc = msg.document?.mime_type?.startsWith('image/') ? msg.document : undefined;
@@ -115,6 +129,7 @@ export async function POST(req: Request) {
   if (!update || typeof update.update_id !== 'number' || alreadyHandled(update.update_id)) return Response.json({ok: true});
 
   // Answer Telegram immediately (so it never retries and repeats an action) and keep working in the background.
-  waitUntil(processUpdate(update));
+  const chatId = update.message?.chat.id ?? update.callback_query?.message?.chat.id;
+  waitUntil(chatId === undefined ? processUpdate(update) : requestContext.run({chatId}, () => processUpdate(update)));
   return Response.json({ok: true});
 }

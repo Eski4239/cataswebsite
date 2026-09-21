@@ -1,19 +1,21 @@
 // Weekly digest — a friendly nudge plus stats, sent to Telegram every Monday by the cron job.
 import {readJson} from './github';
+import {todayInMadrid} from './time';
 import {getSiteStats, statsConfigured} from './stats';
-import type {ReelRecord, TastingRecord} from '../content/schema';
+import type {BottleRecord, ReelRecord, TastingRecord} from '../content/schema';
 
 const DAY = 86_400_000;
 
 export async function buildDigest(): Promise<string> {
-  const [reels, tastings] = await Promise.all([
+  const [reels, tastings, bottle] = await Promise.all([
     readJson<ReelRecord[]>('content/reels.json'),
-    readJson<TastingRecord[]>('content/tastings.json')
+    readJson<TastingRecord[]>('content/tastings.json'),
+    readJson<BottleRecord>('content/bottle.json')
   ]);
   const now = Date.now();
   const live = reels.filter((r) => Date.parse(r.publishedAt) <= now).sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
   const scheduled = reels.filter((r) => Date.parse(r.publishedAt) > now);
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayInMadrid();
   const upcoming = tastings.filter((t) => t.date >= today).sort((a, b) => a.date.localeCompare(b.date));
 
   const en: string[] = ['Good morning! Weekly website check-in.'];
@@ -36,11 +38,21 @@ export async function buildDigest(): Promise<string> {
     es.push('• No hay catas próximas en la web. Envíame los detalles de la siguiente cuando esté planeada.');
   } else {
     const t = upcoming[0];
-    const inDays = Math.ceil((Date.parse(t.date) - now) / DAY);
+    const inDays = Math.round((Date.parse(t.date) - Date.parse(today)) / DAY);
     if (inDays <= 14) {
       en.push(`• "${t.title.en}" is in ${inDays} day(s). Time to promote it with a reel?`);
       es.push(`• "${t.title.es}" es en ${inDays} día(s). Momento de promocionarla con un reel.`);
     }
+  }
+
+  const bottleAge = bottle.updatedAt ? Math.round((Date.parse(today) - Date.parse(bottle.updatedAt)) / DAY) : null;
+  if (bottleAge === null || bottleAge >= 10) {
+    en.push(
+      `• The Bottle of the Week ("${bottle.wineName}") ${bottleAge === null ? 'has not been updated since I started tracking it' : `has been the same for ${bottleAge} days`}. Fancy a new one?`
+    );
+    es.push(
+      `• La Botella de la Semana ("${bottle.wineName}") ${bottleAge === null ? 'no se ha actualizado desde que llevo la cuenta' : `es la misma desde hace ${bottleAge} días`}. ¿Ponemos una nueva?`
+    );
   }
 
   let stats = '';

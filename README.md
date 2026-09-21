@@ -33,6 +33,7 @@ Luis and his brother update the site by chatting with a Telegram bot. Claude (So
 **What it can do:** add/edit/delete reels (and schedule them for later), tastings and the Bottle of the Week; edit the About text and portrait; show site stats; make backups (and draft newsletters once email is set up).
 
 - Webhook: `src/app/api/telegram/route.ts`; agent loop `src/lib/agent/agent.ts`; tools `src/lib/agent/tools.ts`
+- Deployment confirmations: `src/app/api/github-webhook/route.ts` receives GitHub's "Deployment statuses" events and tells the chat that made a change whether it is live or failed (agent commits carry a `chat: <id>` trailer). Optional; needs `GITHUB_WEBHOOK_SECRET` and the webhook set up in the repo settings.
 - Daily cron: `src/app/api/cron/daily/route.ts` (see `vercel.json`). Mondays: weekly digest with a nudge and stats. 1st of the month: backup (git tag `backup-YYYY-MM-DD` + zip sent to Telegram). Test with `GET /api/cron/daily?force=digest` (or `backup`) and header `Authorization: Bearer $CRON_SECRET`.
 - Scheduled reels have a future `publishedAt`; pages re-render every 15 minutes and show them once the time passes. Tastings drop off automatically after their date.
 - Group chats: in a group the bot only reacts to commands, @mentions of the bot, and replies to its own messages (ordinary chat is ignored). Only allowlisted members can instruct it, whoever else is in the group. `/id@<botname>` in the group shows the group's chat ID for `TELEGRAM_NOTIFY_CHAT_IDS`.
