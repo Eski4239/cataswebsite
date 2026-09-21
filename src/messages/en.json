@@ -30,7 +30,8 @@
     "placeholder": "Your email address",
     "button": "Subscribe",
     "sending": "Joining…",
-    "success": "Thank you — welcome to the journal."
+    "success": "Thank you — welcome to the journal.",
+    "error": "Something went wrong. Please try again."
   },
   "media": {
     "heading": "Stories in Motion",
@@ -43,7 +44,8 @@
       "grapes": "Grapes",
       "tastings": "Tastings",
       "beginnerGuides": "Beginner Guides"
-    }
+    },
+    "emptyCategory": "No reels in this category yet."
   },
   "tastings": {
     "heading": "Upcoming Experiences",
@@ -65,5 +67,23 @@
   },
   "footer": {
     "copyright": "© {year} Catas Luis de Torres · Cinematic Wine Storytelling"
+  },
+  "contact": {
+    "heading": "Contact",
+    "subheading": "Collaborations, private tastings, press: write to us.",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "submit": "Express Interest",
+    "sending": "Sending…",
+    "success": "Thank you, your message has been sent. We will be in touch soon.",
+    "error": "Something went wrong. Please try again, or write to luis@luistorrescatas.com.",
+    "categories": {
+      "collaborations": "Collaborations",
+      "privateTastings": "Private Tastings",
+      "media": "Media",
+      "partnerships": "Partnerships",
+      "general": "General Inquiry"
+    }
   }
 }

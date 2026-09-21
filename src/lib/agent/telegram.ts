@@ -52,7 +52,8 @@ export type TgMessage = {
   caption?: string;
   photo?: {file_id: string; width: number; height: number}[];
   video?: unknown;
-  document?: unknown;
+  document?: {file_id: string; mime_type?: string};
+  sticker?: unknown;
   voice?: unknown;
   reply_to_message?: {text?: string; caption?: string};
 };
