@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit",
     "test:agent": "tsx tests/agent-tools.test.mts && tsx tests/agent-e2e.test.mts",
     "format": "prettier --write \"src/**/*.{ts,tsx,json}\" \"tests/*.mts\" \"*.{ts,mjs,json}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,json}\" \"tests/*.mts\" \"*.{ts,mjs,json}\""
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,json}\" \"tests/*.mts\" \"*.{ts,mjs,json}\"",
+    "test:site": "tsx tests/seo.test.mts",
+    "test": "npm run test:agent && npm run test:site"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.127.0",

@@ -22,7 +22,7 @@ jobs:
         run: npm run format:check
       - name: Typecheck
         run: npm run typecheck
-      - name: Agent tests (offline, no secrets needed)
-        run: npm run test:agent
+      - name: Tests (offline, no secrets needed)
+        run: npm test
       - name: Build
         run: npm run build
