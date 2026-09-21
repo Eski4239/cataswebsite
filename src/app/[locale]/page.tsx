@@ -1,6 +1,7 @@
 import {setRequestLocale, getTranslations} from 'next-intl/server';
 import type {Locale} from '@/lib/i18n/routing';
 import {pageMetadata} from '@/lib/seo/metadata';
+import Image from 'next/image';
 import Link from 'next/link';
 import {FadeUp} from '@/components/motion/fade-up';
 import {getBottleOfWeek, getTastings} from '@/lib/content';
@@ -73,7 +74,15 @@ export default async function Home({params}: Props) {
             <h2 className="font-heading text-4xl font-light text-charcoal md:text-5xl">{bottle('heading')}</h2>
             <article className="mt-10 rounded-2xl border border-border bg-surface p-8 md:p-12">
               {bottleContent.image && (
-                <img src={bottleContent.image} alt={bottleContent.wineName} className="mb-8 h-64 w-full rounded-xl object-cover" />
+                <div className="relative mb-8 h-64 w-full overflow-hidden rounded-xl">
+                  <Image
+                    src={bottleContent.image}
+                    alt={bottleContent.wineName}
+                    fill
+                    sizes="(min-width: 768px) 672px, 100vw"
+                    className="object-cover"
+                  />
+                </div>
               )}
               <p className="meta-label text-burgundy">{bottleContent.region}</p>
               <h3 className="mt-3 font-heading text-3xl text-charcoal md:text-4xl">{bottleContent.wineName}</h3>

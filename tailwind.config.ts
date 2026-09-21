@@ -8,7 +8,8 @@ const config: Config = {
         background: '#FAF7F2',
         surface: '#FFFFFF',
         burgundy: '#6B2737',
-        gold: '#B8976A',
+        gold: '#B8976A', // decorative only (borders, rules): too pale for text
+        'gold-deep': '#876A3A', // gold for text: 4.7:1 on the ivory background (AA)
         ivory: '#FAF7F2',
         charcoal: '#2C2C2C',
         muted: '#6B6B6B',

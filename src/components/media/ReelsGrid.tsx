@@ -61,6 +61,7 @@ export function ReelsGrid({reels}: {reels: Reel[]}) {
               <button
                 key={key}
                 onClick={() => setActive(categoryValues[i])}
+                aria-pressed={categoryValues[i] === active}
                 className={`border px-5 py-2 text-xs uppercase tracking-[0.16em] transition-colors duration-300 ${
                   categoryValues[i] === active
                     ? 'border-burgundy bg-burgundy text-ivory'

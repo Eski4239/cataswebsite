@@ -4,7 +4,12 @@
     "tastings": "Catas",
     "media": "Media y Vídeos",
     "about": "Sobre Luis",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "menu": "Menú",
+    "close": "Cerrar",
+    "label": "Navegación principal",
+    "skip": "Saltar al contenido",
+    "language": "Idioma"
   },
   "hero": {
     "heading": "El vino es historia que se puede saborear.",
@@ -48,13 +53,17 @@
       "total": "Total",
       "reserve": "Reservar Tu Plaza",
       "emailSubject": "Reserva de Cata - {title}",
-      "emailBody": "Me gustaría reservar {quantity} plaza(s) para {title} el {date}."
+      "emailBody": "Me gustaría reservar {quantity} plaza(s) para {title} el {date}.",
+      "close": "Cerrar",
+      "decrease": "Menos invitados",
+      "increase": "Más invitados"
     },
     "empty": "Pronto anunciaremos nuevas experiencias. Síguenos en Instagram para enterarte antes."
   },
   "about": {
     "title": "Sobre Luis",
-    "description": "Un viaje íntimo de estilo documental a través de Catas Luis de Torres, desde los primeros encuentros con el viñedo hasta las catas privadas."
+    "description": "Un viaje íntimo de estilo documental a través de Catas Luis de Torres, desde los primeros encuentros con el viñedo hasta las catas privadas.",
+    "portraitAlt": "Retrato de Luis de Torres"
   },
   "footer": {
     "copyright": "© {year} Catas Luis de Torres · Narrativa Cinematográfica del Vino"
@@ -90,5 +99,10 @@
     "title": "Página no encontrada",
     "body": "La página que buscas no existe o se ha movido.",
     "home": "Volver al inicio"
+  },
+  "errorPage": {
+    "title": "Algo ha salido mal",
+    "body": "No hemos podido cargar esta página. Inténtalo de nuevo.",
+    "retry": "Reintentar"
   }
 }
