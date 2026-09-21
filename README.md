@@ -39,6 +39,10 @@ Luis and his brother update the site by chatting with a Telegram bot. Claude (So
 - Newsletter subscribers are stored in the Resend audience `RESEND_AUDIENCE_ID` by the signup form (`/api/newsletter`).
 - Setup: create the bot with @BotFather, set the env vars from `.env.example` in `.env.local` and in Vercel, deploy, then run `node --env-file=.env.local scripts/set-telegram-webhook.mjs https://<your-site>`
 
+## Tests
+
+`npm run test:agent` runs 51 offline checks (no network, no real keys): the agent's tools against an in-memory fake GitHub, and the whole Telegram webhook -> agent -> Claude -> tools -> GitHub -> Telegram pipeline with scripted fakes, including failures (bad key, no credit, rate limits, commit races, strangers, duplicate deliveries). Fixtures live in `tests/fixtures/`.
+
 ## Folder Structure
 
 ```
