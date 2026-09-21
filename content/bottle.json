@@ -1,0 +1,16 @@
+{
+  "wineName": "Viña Tondonia Reserva 2011",
+  "winery": "López de Heredia",
+  "region": {
+    "en": "Rioja Alta, Spain",
+    "es": "Rioja Alta, España"
+  },
+  "tastingNotes": {
+    "en": "Dried cherry, cedar, tobacco leaf, and energetic acidity that lingers with quiet confidence.",
+    "es": "Cereza seca, cedro, hoja de tabaco y una acidez enérgica que perdura con serena confianza."
+  },
+  "story": {
+    "en": "A cellar where patience remains an act of cultural preservation — this wine captures the continuity of traditional Rioja in a modern era that often forgets to listen.",
+    "es": "Una bodega donde la paciencia sigue siendo un acto de preservación cultural — este vino captura la continuidad de la Rioja tradicional en una era moderna que a menudo olvida escuchar."
+  }
+}

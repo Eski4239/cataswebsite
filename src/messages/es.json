@@ -17,26 +17,12 @@
   },
   "bottle": {
     "heading": "Botella de la Semana",
-    "tastingNotesLabel": "Notas de Cata",
-    "region": "Rioja Alta, España",
-    "wineName": "Viña Tondonia Reserva 2011",
-    "winery": "López de Heredia",
-    "tastingNotes": "Cereza seca, cedro, hoja de tabaco y una acidez enérgica que perdura con serena confianza.",
-    "story": "Una bodega donde la paciencia sigue siendo un acto de preservación cultural — este vino captura la continuidad de la Rioja tradicional en una era moderna que a menudo olvida escuchar."
+    "tastingNotesLabel": "Notas de Cata"
   },
   "tastingsHome": {
     "heading": "Próximas Experiencias",
     "requestInvitation": "Solicitar Invitación",
-    "card1": {
-      "date": "28 de junio, 2026 · Miami",
-      "title": "Archivo Rioja a la Luz de las Velas",
-      "description": "Una cata vertical privada con contexto histórico y ritmo reflexivo. Ambiente íntimo, limitado a doce invitados."
-    },
-    "card2": {
-      "date": "19 de julio, 2026 · Nueva York",
-      "title": "Narrativas de Altitud Andina",
-      "description": "Cata guiada por historias a través de la altitud, el patrimonio y la cultura de mesa. Una velada de terroir y tradición sudamericana."
-    }
+    "empty": "Pronto anunciaremos nuevas experiencias. Únete al journal para enterarte antes."
   },
   "newsletter": {
     "heading": "Únete al Diario",
@@ -64,19 +50,14 @@
     "subheading": "Encuentros íntimos centrados en historias, terroir y contexto cultural.",
     "perPerson": "por persona",
     "viewDetails": "Ver Detalles",
-    "title": "Archivo Rioja a la Luz de las Velas",
-    "city": "Miami",
-    "date": "28 de junio, 2026",
-    "time": "19:30",
-    "description": "Una cata vertical privada con contexto histórico y ritmo reflexivo. Ambiente íntimo, limitado a doce invitados.",
-    "longDescription": "Una velada dedicada a las grandes reservas de Rioja Alta — vinos envejecidos con paciencia en roble americano, extraídos de bodegas que han practicado la contención durante más de un siglo. Cada copa se acompaña de su momento histórico: la recuperación tras la filoxera, el movimiento cooperativo, la revolución silenciosa de la fermentación con temperatura controlada. Luz de velas, conversación sin prisas y ese tipo de silencio que solo el vino antiguo sabe enseñar.",
     "modal": {
       "guests": "Invitados",
       "total": "Total",
       "reserve": "Reservar Tu Plaza",
       "emailSubject": "Reserva de Cata - {title}",
       "emailBody": "Me gustaría reservar {quantity} plaza(s) para {title} el {date}."
-    }
+    },
+    "empty": "Pronto anunciaremos nuevas experiencias. Únete al journal para enterarte antes."
   },
   "about": {
     "title": "Sobre Luis",

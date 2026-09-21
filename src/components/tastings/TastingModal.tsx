@@ -4,18 +4,11 @@
 import {useState, useEffect} from 'react';
 import {useTranslations} from 'next-intl';
 
-type Tasting = {
-  title: string;
-  city: string;
-  date: string;
-  time: string;
-  longDescription: string;
-  price: number;
-  image: string;
-};
+import type {Tasting} from '@/lib/content';
 
 export function TastingModal({tasting, onClose}: {tasting: Tasting; onClose: () => void}) {
   const t = useTranslations('tastings.modal');
+  const tt = useTranslations('tastings');
   const [quantity, setQuantity] = useState(1);
   const [visible, setVisible] = useState(false);
 
@@ -25,10 +18,10 @@ export function TastingModal({tasting, onClose}: {tasting: Tasting; onClose: () 
     return () => { document.body.style.overflow = ''; };
   }, []);
 
-  const total = tasting.price * quantity;
+  const total = (tasting.price ?? 0) * quantity;
 
   const subject = t('emailSubject', {title: tasting.title});
-  const body = t('emailBody', {quantity: String(quantity), title: tasting.title, date: tasting.date});
+  const body = t('emailBody', {quantity: String(quantity), title: tasting.title, date: tasting.dateLabel});
   const mailtoHref = `mailto:luis@luistorrescatas.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
   return (
@@ -61,8 +54,8 @@ export function TastingModal({tasting, onClose}: {tasting: Tasting; onClose: () 
           </h2>
 
           <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted">
-            <span>{tasting.date}</span>
-            <span>{tasting.time}</span>
+            <span>{tasting.dateLabel}</span>
+            {tasting.timeLabel && <span>{tasting.timeLabel}</span>}
             <span>{tasting.city}</span>
           </div>
 
@@ -71,30 +64,34 @@ export function TastingModal({tasting, onClose}: {tasting: Tasting; onClose: () 
           </p>
 
           <div className="mt-8 border-t border-border pt-6">
-            <p className="text-sm text-muted">€{tasting.price} per person</p>
+            {tasting.price !== undefined && (
+              <>
+              <p className="text-sm text-muted">€{tasting.price} {tt('perPerson')}</p>
 
-            <div className="mt-4 flex items-center gap-4">
-              <span className="text-xs uppercase tracking-[0.16em] text-charcoal">{t('guests')}</span>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-charcoal transition-colors hover:border-burgundy"
-                >
-                  −
-                </button>
-                <span className="w-6 text-center font-heading text-xl text-charcoal">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(Math.min(4, quantity + 1))}
-                  className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-charcoal transition-colors hover:border-burgundy"
-                >
-                  +
-                </button>
+              <div className="mt-4 flex items-center gap-4">
+                <span className="text-xs uppercase tracking-[0.16em] text-charcoal">{t('guests')}</span>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-charcoal transition-colors hover:border-burgundy"
+                  >
+                    −
+                  </button>
+                  <span className="w-6 text-center font-heading text-xl text-charcoal">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity(Math.min(4, quantity + 1))}
+                    className="flex h-8 w-8 items-center justify-center rounded-full border border-border text-charcoal transition-colors hover:border-burgundy"
+                  >
+                    +
+                  </button>
+                </div>
               </div>
-            </div>
 
-            <p className="mt-4 font-heading text-2xl text-charcoal">
-              {t('total')}: €{total}
-            </p>
+              <p className="mt-4 font-heading text-2xl text-charcoal">
+                {t('total')}: €{total}
+              </p>
+              </>
+            )}
 
             <a
               href={mailtoHref}

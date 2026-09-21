@@ -23,7 +23,7 @@ export async function sendMessage(chatId: number, text: string, buttons?: Inline
   return call('sendMessage', {
     chat_id: chatId,
     text: text.slice(0, 4000),
-    ...(buttons?.length ? {reply_markup: {inline_keyboard: [buttons]}} : {})
+    ...(buttons?.length ? {reply_markup: {inline_keyboard: buttons.map((b) => [b])}} : {})
   });
 }
 
@@ -70,4 +70,23 @@ export function isAllowed(user: TgUser | undefined): boolean {
     .map((s) => s.trim().replace(/^@/, '').toLowerCase())
     .filter(Boolean);
   return list.includes(String(user.id)) || (!!user.username && list.includes(user.username.toLowerCase()));
+}
+
+export async function sendDocument(chatId: number, data: Buffer, filename: string, caption?: string) {
+  const form = new FormData();
+  form.set('chat_id', String(chatId));
+  if (caption) form.set('caption', caption.slice(0, 1000));
+  form.set('document', new Blob([new Uint8Array(data)]), filename);
+  const res = await fetch(`https://api.telegram.org/bot${token()}/sendDocument`, {method: 'POST', body: form});
+  const json = (await res.json()) as {ok: boolean; description?: string};
+  if (!json.ok) throw new Error(`Telegram sendDocument: ${json.description}`);
+}
+
+/**
+ * Chats that receive scheduled messages (weekly digest, backups). Telegram can only message numeric chat IDs,
+ * so these are the numeric entries of TELEGRAM_ALLOWED_USERS plus anything in TELEGRAM_NOTIFY_CHAT_IDS.
+ */
+export function notifyChatIds(): number[] {
+  const raw = `${process.env.TELEGRAM_ALLOWED_USERS || ''},${process.env.TELEGRAM_NOTIFY_CHAT_IDS || ''}`;
+  return [...new Set(raw.split(',').map((s) => s.trim()).filter((s) => /^\d+$/.test(s)).map(Number))];
 }

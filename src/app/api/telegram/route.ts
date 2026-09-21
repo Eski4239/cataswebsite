@@ -17,10 +17,12 @@ export const maxDuration = 60;
 
 const HELP =
   'I can update the website for you.\n\n' +
-  '• Send an Instagram reel link and tell me about it, and I will add it to the Media page in English and Spanish.\n' +
-  '• Ask me to change or remove a reel, or edit the About page.\n' +
-  '• Send a photo with "use this as the portrait" to change the About photo.\n' +
-  '• Say "show content" to see what is live, or "undo" to reverse my last change.';
+  '• Reels: send an Instagram link and tell me about it. I write it up in English and Spanish. Say "schedule it for Friday 6pm" to publish later.\n' +
+  '• Tastings: tell me the date, city and details (and send a photo for the cover).\n' +
+  '• Bottle of the week: tell me the wine and its story (a photo is optional).\n' +
+  '• About page text and portrait photo.\n' +
+  '• Newsletter: tell me what to announce. I draft it and you press Send.\n' +
+  '• "stats" for visitor numbers, "backup" for a full copy, "show content" to see what is live, "undo" to reverse my last change.';
 
 async function handleMessage(msg: TgMessage) {
   const chatId = msg.chat.id;
@@ -43,7 +45,7 @@ async function handleMessage(msg: TgMessage) {
   }
 
   await sendTyping(chatId);
-  const ctx: ToolContext = {confirmations: []};
+  const ctx: ToolContext = {chatId, confirmations: []};
   if (msg.photo?.length) ctx.photo = await downloadFile(msg.photo[msg.photo.length - 1].file_id);
 
   const reply = await runAgent(text, ctx, msg.reply_to_message?.text ?? msg.reply_to_message?.caption);

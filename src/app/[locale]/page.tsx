@@ -3,7 +3,11 @@ import type {Locale} from '@/lib/i18n/routing';
 import {buildMetadata} from '@/lib/seo/metadata';
 import Link from 'next/link';
 import {FadeUp} from '@/components/motion/fade-up';
+import {getBottleOfWeek, getTastings} from '@/lib/content';
 import {NewsletterForm} from '@/components/newsletter/newsletter-form';
+
+// Re-render periodically so scheduled reels appear and past tastings drop off
+export const revalidate = 900;
 
 type Props = {
   params: Promise<{locale: Locale}>;
@@ -23,6 +27,8 @@ export default async function Home({params}: Props) {
   const bottle = await getTranslations('bottle');
   const tastingsHome = await getTranslations('tastingsHome');
   const newsletter = await getTranslations('newsletter');
+  const bottleContent = await getBottleOfWeek(locale);
+  const upcoming = (await getTastings(locale)).slice(0, 2);
 
   return (
     <>
@@ -78,18 +84,21 @@ export default async function Home({params}: Props) {
               {bottle('heading')}
             </h2>
             <article className="mt-10 rounded-2xl border border-border bg-surface p-8 md:p-12">
-              <p className="meta-label text-burgundy">{bottle('region')}</p>
+              {bottleContent.image && (
+                <img src={bottleContent.image} alt={bottleContent.wineName} className="mb-8 h-64 w-full rounded-xl object-cover" />
+              )}
+              <p className="meta-label text-burgundy">{bottleContent.region}</p>
               <h3 className="mt-3 font-heading text-3xl text-charcoal md:text-4xl">
-                {bottle('wineName')}
+                {bottleContent.wineName}
               </h3>
-              <p className="mt-2 text-sm text-muted">{bottle('winery')}</p>
+              <p className="mt-2 text-sm text-muted">{bottleContent.winery}</p>
               <div className="mt-6 space-y-4 text-muted">
                 <p>
                   <span className="meta-label mr-2 text-charcoal">{bottle('tastingNotesLabel')}</span><br />
-                  {bottle('tastingNotes')}
+                  {bottleContent.tastingNotes}
                 </p>
                 <p className="border-l-2 border-gold pl-4 italic">
-                  {bottle('story')}
+                  {bottleContent.story}
                 </p>
               </div>
             </article>
@@ -104,38 +113,27 @@ export default async function Home({params}: Props) {
             <h2 className="text-center font-heading text-4xl font-light text-charcoal md:text-5xl">
               {tastingsHome('heading')}
             </h2>
-            <div className="mt-12 grid gap-8 md:grid-cols-2">
-              <article className="rounded-2xl border border-border bg-surface p-8">
-                <p className="meta-label">{tastingsHome('card1.date')}</p>
-                <h3 className="mt-3 font-heading text-2xl text-charcoal md:text-3xl">
-                  {tastingsHome('card1.title')}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted">
-                  {tastingsHome('card1.description')}
-                </p>
-                <Link
-                  href={`/${locale}/contact`}
-                  className="mt-6 inline-block border border-burgundy px-6 py-2.5 text-xs uppercase tracking-[0.16em] text-burgundy transition-colors duration-300 hover:bg-burgundy hover:text-ivory"
-                >
-                  {tastingsHome('requestInvitation')}
-                </Link>
-              </article>
-              <article className="rounded-2xl border border-border bg-surface p-8">
-                <p className="meta-label">{tastingsHome('card2.date')}</p>
-                <h3 className="mt-3 font-heading text-2xl text-charcoal md:text-3xl">
-                  {tastingsHome('card2.title')}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted">
-                  {tastingsHome('card2.description')}
-                </p>
-                <Link
-                  href={`/${locale}/contact`}
-                  className="mt-6 inline-block border border-burgundy px-6 py-2.5 text-xs uppercase tracking-[0.16em] text-burgundy transition-colors duration-300 hover:bg-burgundy hover:text-ivory"
-                >
-                  {tastingsHome('requestInvitation')}
-                </Link>
-              </article>
-            </div>
+            {upcoming.length === 0 ? (
+              <p className="mt-12 text-center font-heading text-2xl italic text-muted">{tastingsHome('empty')}</p>
+            ) : (
+              <div className="mt-12 grid gap-8 md:grid-cols-2">
+                {upcoming.map((tasting) => (
+                  <article key={tasting.id} className="rounded-2xl border border-border bg-surface p-8">
+                    <p className="meta-label">
+                      {tasting.dateLabel} · {tasting.city}
+                    </p>
+                    <h3 className="mt-3 font-heading text-2xl text-charcoal md:text-3xl">{tasting.title}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-muted">{tasting.description}</p>
+                    <Link
+                      href={`/${locale}/contact`}
+                      className="mt-6 inline-block border border-burgundy px-6 py-2.5 text-xs uppercase tracking-[0.16em] text-burgundy transition-colors duration-300 hover:bg-burgundy hover:text-ivory"
+                    >
+                      {tastingsHome('requestInvitation')}
+                    </Link>
+                  </article>
+                ))}
+              </div>
+            )}
           </div>
         </FadeUp>
       </section>

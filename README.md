@@ -28,10 +28,15 @@ All editable content lives in `content/` (`reels.json`, `about.json`) and is val
 
 ## Telegram content agent
 
-Luis and his brother can update the site by chatting with a Telegram bot. Claude reads each message (text and photos), calls tools that edit `content/*.json` and `public/uploads/`, and commits to `main` through the GitHub API; Vercel then redeploys. Every change has an ↩️ Undo button, and deletes need a confirmation button.
+Luis and his brother update the site by chatting with a Telegram bot. Claude (Sonnet 5) reads each message (text and photos), calls tools that edit `content/*.json` and `public/uploads/`, and commits to `main` through the GitHub API; Vercel then redeploys. Every change has an ↩️ Undo button; deletes and newsletters need a button press.
 
-- Webhook: `src/app/api/telegram/route.ts`; agent loop: `src/lib/agent/agent.ts`; tools: `src/lib/agent/tools.ts`
-- Access: only usernames or IDs in `TELEGRAM_ALLOWED_USERS`; the webhook rejects calls without `TELEGRAM_WEBHOOK_SECRET`
+**What it can do:** add/edit/delete reels (and schedule them for later), tastings and the Bottle of the Week; edit the About text and portrait; draft and send a bilingual newsletter; show site stats; make backups.
+
+- Webhook: `src/app/api/telegram/route.ts`; agent loop `src/lib/agent/agent.ts`; tools `src/lib/agent/tools.ts`
+- Daily cron: `src/app/api/cron/daily/route.ts` (see `vercel.json`). Mondays: weekly digest with a nudge and stats. 1st of the month: backup (git tag `backup-YYYY-MM-DD` + zip sent to Telegram). Test with `GET /api/cron/daily?force=digest` (or `backup`) and header `Authorization: Bearer $CRON_SECRET`.
+- Scheduled reels have a future `publishedAt`; pages re-render every 15 minutes and show them once the time passes. Tastings drop off automatically after their date.
+- Access: only usernames/IDs in `TELEGRAM_ALLOWED_USERS`; the webhook rejects calls without `TELEGRAM_WEBHOOK_SECRET`.
+- Newsletter subscribers are stored in the Resend audience `RESEND_AUDIENCE_ID` by the signup form (`/api/newsletter`).
 - Setup: create the bot with @BotFather, set the env vars from `.env.example` in `.env.local` and in Vercel, deploy, then run `node --env-file=.env.local scripts/set-telegram-webhook.mjs https://<your-site>`
 
 ## Folder Structure
@@ -62,7 +67,7 @@ src/
 │   └── seo/                # Metadata + JSON-LD generators
 └── messages/               # Translation files (en.json, es.json)
 
-content/                   # reels.json, about.json (localized {en, es} fields)
+content/                   # reels, tastings, bottle, about (.json, localized {en, es} fields)
 public/uploads/            # Uploaded images
 ```
 

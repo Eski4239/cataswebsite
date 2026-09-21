@@ -94,3 +94,27 @@ export async function undoHead(expectSha?: string): Promise<{ok: true; sha: stri
   await gh(`/git/refs/heads/${branch}`, {method: 'PATCH', body: JSON.stringify({sha: commit.sha})});
   return {ok: true, sha: commit.sha, undone: head.message.split('\n')[0]};
 }
+
+/** Create a lightweight tag (used for backup restore points) at the current head of the content branch. */
+export async function createTag(name: string): Promise<string> {
+  const {branch} = cfg();
+  const ref = await gh<{object: {sha: string}}>(`/git/ref/heads/${branch}`);
+  await gh('/git/refs', {method: 'POST', body: JSON.stringify({ref: `refs/tags/${name}`, sha: ref.object.sha})});
+  return ref.object.sha;
+}
+
+export async function listTags(prefix: string): Promise<string[]> {
+  const refs = await gh<{ref: string}[]>(`/git/matching-refs/tags/${prefix}`);
+  return refs.map((r) => r.ref.replace('refs/tags/', '')).sort();
+}
+
+/** Zip of the whole repository (source, content, images) at the head of the content branch. */
+export async function downloadZip(): Promise<Buffer> {
+  const {token, repo, branch} = cfg();
+  const res = await fetch(`${API}/repos/${repo}/zipball/${branch}`, {
+    headers: {Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json'},
+    redirect: 'follow'
+  });
+  if (!res.ok) throw new Error(`GitHub zipball -> ${res.status}`);
+  return Buffer.from(await res.arrayBuffer());
+}
